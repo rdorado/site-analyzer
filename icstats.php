@@ -17,9 +17,9 @@
     $result = $conn->query($stmt);
 
     print "<table border='1'>";
-    print "<tr><th>Key URL</th><th>Item name</th><th>Count</th><th>User</th><th>Date</th></tr>";
+    print "<tr><th>Key URL</th><th>Item name</th><th>Count</th><th>User</th></tr>";
     foreach($result as $row) {
-       print "<tr><td>".$row['key_url']."</td><td>".$row['count']."</td></tr>";
+       print "<tr><td>".$row['key_url']."</td><td>".$row['name']."</td><td>".$row['count']."</td></tr>";
     }
     print "</table>";
 

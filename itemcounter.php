@@ -5,11 +5,11 @@ class ItemCounter
 {
    private static $link = null ;
 
-   public static function count($url)
+   public static function count($url,$name)
    {
       if (!$config = parse_ini_file('itemcounter.ini', TRUE)) throw new exception('Unable to open itemcounter.ini.');
 
-      return $config['counter']['url']."?u=".$url;
+      return $config['counter']['url']."?n=".$name."&u=".$url;
    }
 
 }
@@ -35,7 +35,8 @@ After:
 $words = array("Life" => 3, "is" => 7, "beautiful" => 19);
 foreach($words as $word => $key){
 
-  $url = ItemCounter::count("dictionary.php?w=$key");
+  $url = "dictionary.php?w=$key";
+  $url = ItemCounter::count($url,$word);
   print "<a href='$url'>$word</a><br>";
 }
 

@@ -12,9 +12,15 @@
  $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );  
   
  try{
-   $num = $conn->exec("UPDATE ".$config['counter']['db_table']." SET count = count+1 WHERE key_url = '".$_GET['u']."'");
+
+   session_start();
+   $session_var_name = $config['counter']['db_table'];
+   $user = $_SESSION[$session_var_name];
+   
+   $num = $conn->exec("UPDATE ".$config['counter']['db_table']." SET count = count+1 WHERE key_url = '".$_GET['u']."' AND user = '".$user."'");
    if($num==0){
-      $conn->exec("INSERT INTO ".$config['counter']['db_table']." VALUES('".$_GET['u']."',1)");
+      $item_name = $_GET['n'];   
+      $conn->exec("INSERT INTO ".$config['counter']['db_table']." VALUES('".$_GET['u']."','".$item_name."',1,'".$user."')");
    }
  } 
  catch(PDOException $e){

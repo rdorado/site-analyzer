@@ -13,7 +13,7 @@
 
   try{
 
-    $stmt = "CREATE TABLE ".$config['counter']['db_table']." (key_url VARCHAR(80) PRIMARY KEY, count INT DEFAULT 0)";  
+    $stmt = "CREATE TABLE ".$config['counter']['db_table']." (key_url VARCHAR(80) PRIMARY KEY, name VARCHAR(255), count INT DEFAULT 0, user VARCHAR(80))";  
     $result = $conn->exec($stmt);
     
     echo "Installation successful!";
