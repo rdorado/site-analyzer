@@ -1,0 +1,19 @@
+{
+    "name": "rdorado/itemcounter-php",
+    "type": "library",
+    "description": "Count and analize clicks for PHP",
+    "keywords": ["count","analize","test","a/b test","statistics"],
+    "homepage": "https://github.com/rdorado/itemcounter-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ruben Dorado",
+            "email": "ruben.dorados@gmail.com",
+            "homepage": "http://rubendorado.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+}
