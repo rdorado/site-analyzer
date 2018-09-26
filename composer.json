@@ -23,7 +23,7 @@
     },
     "autoload-dev": {
         "psr-4":{
-	    "SDAnalyzer\\Tests": "tests"
+	    "SDAnalyzer\\Tests\\": "tests"
 	}
     }
 }
