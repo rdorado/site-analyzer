@@ -25,45 +25,29 @@ class SiteAnalyzer{
     /*
      * @param 
      */
-    static function count($pdo=NULL)
+    static function count($pdo=null)
     {
-        $config = null;
-        try{
-            $config = new Configuration("site-analyzer.ini", isset($pdo));
+        $config = new Configuration("site-analyzer.ini", isset($pdo));
+        if($pdo==null){
+            $pdo = Persistence::getPDO($config);
         }
-        catch(ConfigurationException $e){
-            trigger_error("[SiteAnalyzer] ".$e->getMessage(), E_USER_WARNING);
-            return;
-        } 
-
-        if($pdo==NULL){
-            try{ 
-                $pdo = Persistence::getPDO($config);
-            }
-            catch(DatabaseException $e){
-                trigger_error("[SiteAnalyzer] ".$e->getMessage(), E_USER_WARNING);
-                return;
-            }
-        }
-
-        try{
-            Persistence::updateCount($pdo, $config);
-        }
-        catch(DatabaseException $e){
-            trigger_error("[SiteAnalyzer] ".$e->getMessage(), E_USER_WARNING);
-            return;
-        }
-        
+        return Persistence::updateCount($pdo,$config);        
     }
 
 
     /*
-     * @param
+     * @param $format string, one of [php-array, xml, json, txt-csv]
      */
-    public static function getStats()
-    {
-
+    public static function getStats($pdo=null)
+    {         
+        $config = new Configuration("site-analyzer.ini", isset($pdo));
+        if($pdo==null){
+            $pdo = Persistence::getPDO($config);
+        }
+        $data = Persistence::getCounts($pdo,$config);
+        return $data;
     } 
+
 
     /*
      * @param

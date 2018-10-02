@@ -69,7 +69,9 @@ class Persistence{
         }        
     }
 
-
+    public static function getCountsById($pdo, $config){
+        return "Works";
+    }
 }
 
 
