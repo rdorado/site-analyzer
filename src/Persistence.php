@@ -69,6 +69,32 @@ class Persistence{
         }        
     }
 
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function getCounts($pdo, $config)
+    {
+        $resp = [];
+        try{
+
+            $dbtable = $config->getCountTableName();
+            $stmt = $pdo->prepare("SELECT * FROM $dbtable group by id");
+            if($stmt->execute()){
+                while($row = $stmt->fetch()){
+                    $resp[] = $row;
+                }
+            }
+            
+            $stmt = null;
+        }
+        catch(Exception $e){
+            throw new DatabaseException("Could not update the count.");
+        }        
+        return $resp;
+    }
+
     public static function getCountsById($pdo, $config){
         return "Works";
     }
