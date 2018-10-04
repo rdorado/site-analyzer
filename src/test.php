@@ -6,7 +6,7 @@ print("<a href='test.php?id=$r1'>Ref</a>");
 
 SiteAnalyzer::count();
 
-echo SiteAnalyzer::getStats();
+print_r(SiteAnalyzer::getStats());
 	
 //SiteAnalyzer::incoming(id1);
 

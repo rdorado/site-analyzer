@@ -38,7 +38,7 @@ class SiteAnalyzer{
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
-    public static function getStats($pdo=null)
+    public static function getStats($pdo=null, $renderer=null)
     {         
         $config = new Configuration("site-analyzer.ini", isset($pdo));
         if($pdo==null){
