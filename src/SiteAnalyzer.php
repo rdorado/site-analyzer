@@ -50,6 +50,27 @@ class SiteAnalyzer{
 
 
     /*
+     * @param $format string, one of [php-array, xml, json, txt-csv]
+     */
+    public static function transform($data, $format)
+    {
+        if($format=="html"){
+            $resp = "<table style='border-collapse: collapse;border: 1px solid black;'>";
+            $resp .="<tr><th style='border: 1px solid black;'>id</th><th style='border: 1px solid black;'>url</th><th style='border: 1px solid black;'>from_id</th><th style='border: 1px solid black;'>time</th><th style='border: 1px solid black;'>user</th><th style='border: 1px solid black;'>count</th></tr>";
+            foreach($data as $row){
+                $resp.="<tr style='border: 1px solid black;'>";
+                foreach($row as $cell){
+                    $resp.="<td style='border: 1px solid black;'>$cell</td>";
+                }  
+                $resp.="</tr>";
+            }
+            return $resp."</table>";
+        }
+        return $data; 
+    } 
+
+
+    /*
      * @param
      */
     public static function getABTest()

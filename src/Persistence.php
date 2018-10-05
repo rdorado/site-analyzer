@@ -83,7 +83,11 @@ class Persistence{
             $stmt = $pdo->prepare("SELECT * FROM $dbtable group by id");
             if($stmt->execute()){
                 while($row = $stmt->fetch()){
-                    $resp[] = $row;
+                    $tmp = [];
+                    for($i=0;$i<6;$i++){
+                        $tmp[] = $row[$i];
+                    }
+                    $resp[] = $tmp;
                 }
             }
             
