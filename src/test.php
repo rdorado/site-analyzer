@@ -4,7 +4,7 @@
 $r1 = rand(1,3);
 print("<a href='test.php?id=$r1'>Ref</a>");
 
-SiteAnalyzer::count();
+SiteAnalyzer::count("Test");
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 	
