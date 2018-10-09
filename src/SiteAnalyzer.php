@@ -25,7 +25,7 @@ class SiteAnalyzer{
     /*
      * @param 
      */
-    static function count($pdo=null,$id=null)
+    static function count($options=null)
     {
         $config = new Configuration("site-analyzer.ini", isset($pdo));
         if($pdo==null){
