@@ -1,5 +1,5 @@
 <?php
-include '..\Configuration.php';
+include 'src/Configuration.php';
 
 final class ConfigurationTest extends PHPUnit_Framework_TestCase
 {
@@ -11,8 +11,9 @@ final class ConfigurationTest extends PHPUnit_Framework_TestCase
      */
     public function testLoadConfiguration()
     {
-        $config = new Configuration("site-analyzer.ini");
-        $config
+        $config = new Configuration("site-analyzer.ini", FALSE);
+         
+        $this->assertNull( $config->getCountTableName() ); 
     }
 
 
