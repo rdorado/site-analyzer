@@ -11,25 +11,38 @@
 
 
 /**
- * class SiteAnalyzer
+ * class ConfigurationException
  *
  * @package   SiteAnalyzer
  * @author    Ruben Dorado <ruben.dorados@gmail.com>
  * @copyright 2018 Ruben Dorado
  * @license   http://www.opensource.org/licenses/MIT The MIT License
  */
-public class ConfigurationException extends Exception{
+class ConfigurationException extends Exception{
 
 }
 
 /**
  * class SiteAnalyzer
  *
+ * @package   DatabaseException
+ * @author    Ruben Dorado <ruben.dorados@gmail.com>
+ * @copyright 2018 Ruben Dorado
+ * @license   http://www.opensource.org/licenses/MIT The MIT License
+ */
+class DatabaseException extends Exception{
+
+}
+
+
+/**
+ * class PersistenceException
+ *
  * @package   SiteAnalyzer
  * @author    Ruben Dorado <ruben.dorados@gmail.com>
  * @copyright 2018 Ruben Dorado
  * @license   http://www.opensource.org/licenses/MIT The MIT License
  */
-public class Database	Exception extends Exception{
-
+class PersistenceException extends Exception{
+    
 }

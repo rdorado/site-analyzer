@@ -1,7 +1,9 @@
 <?php
+use PHPUnit\Framework\TestCase;
+
 include 'src/Configuration.php';
 
-final class ConfigurationTest extends PHPUnit_Framework_TestCase
+final class ConfigurationTest extends TestCase
 {
 
 
@@ -12,8 +14,26 @@ final class ConfigurationTest extends PHPUnit_Framework_TestCase
     public function testLoadConfiguration()
     {
         $config = new Configuration("site-analyzer.ini", FALSE);
-        $val = $config->getCountTableName() 
-        //$this->assertNull(  ); 
+
+        /* Test table Name */
+        $val = $config->getCountTableName(); 
+        $this->assertNotNull($val);
+
+
+    }
+
+
+    /**
+     * @test
+     * @covers Configuration::::__construct()
+     */
+    public function testLoadConfigurationWithPDO()
+    {
+        $config = new Configuration("site-analyzer.ini", TRUE);
+        
+        /*  */
+        $val = $config->getCountTableName();
+        $this->assertNull(  ); 
     }
 
 

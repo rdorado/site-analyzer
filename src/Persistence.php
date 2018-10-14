@@ -6,9 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-//namespace SiteAnalyzer;
-
+include_once 'exceptions.php';
 
 /**
  * class SiteAnalyzer
@@ -35,6 +33,81 @@ class Persistence{
          catch(Exception $e){
             throw new PersistenceException("Could not create pdo connection.");
          }
+    }
+
+
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function crateDatabase($pdo, $config){
+        try{
+
+            $db_main_table = $config->getMainTableName();
+            $db_options_table = $config->getOptionsTableName();           
+            $db_from_table = $config->getFromTableName();
+
+            $stmt = $pdo->prepare("CREATE TABLE $db_main_table (id VARCHAR(255), url VARCHAR(255), count INT)");
+            $stmt = $pdo->prepare("CREATE TABLE $db_options_table (id VARCHAR(255), time TIMESTAMP, user )");
+            $stmt = $pdo->prepare("CREATE TABLE $db_from_table (id1 VARCHAR(255), id2 VARCHAR(255))");
+
+        }
+        catch(Exception $e){
+            throw new DatabaseException("Could not update the count.");
+        }        
+        return $resp;
+
+    }
+
+
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function deleteDatabase($pdo, $config){
+        try{
+            $db_main_table = $config->getMainTableName();
+            $db_options_table = $config->getOptionsTableName();           
+            $db_from_table = $config->getFromTableName();
+
+            $stmt = $pdo->prepare("CREATE TABLE $db_main_table (id VARCHAR(255), url VARCHAR(255), count INT)");
+            $stmt = $pdo->prepare("CREATE TABLE $db_options_table (id VARCHAR(255), time TIMESTAMP, user )");
+            $stmt = $pdo->prepare("CREATE TABLE $db_from_table (id1 VARCHAR(255), id2 VARCHAR(255))");
+
+        }
+        catch(Exception $e){
+            throw new DatabaseException("Could not update the count.");
+        }        
+        return $resp;
+
+    }
+
+
+
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function checkTables($pdo, $config){
+        try{
+
+            $db_main_table = $config->getMainTableName();
+            $db_options_table = $config->getOptionsTableName();           
+            $db_from_table = $config->getFromTableName();
+
+            $stmt = $pdo->prepare("SELECT id,url,count FROM $db_main_table WHERE 1 != 0");
+            $stmt = $pdo->prepare("SELECT id,time,user FROM $db_options_table WHERE 1 != 0");
+            $stmt = $pdo->prepare("SELECT id,from,count FROM $db_from_table WHERE 1 != 0");
+
+        }
+        catch(Exception $e){
+            throw new DatabaseException("Could not update the count.");
+        }        
+        return $resp;
+
     }
 
 

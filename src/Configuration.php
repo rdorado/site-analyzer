@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+include_once 'exceptions.php';
 //namespace SiteAnalyzer;
 
 
@@ -122,13 +122,13 @@ final class Configuration
             return $configFile[$section][$varname];
         }
         catch(Exception $e){
-            throw new ConfigurationException("Error loading config file. Variable $varname in section $section not found. Check the configuration file.");
+            throw new ConfigurationException( "Error loading config file. Variable $varname in section $section not found. Check the configuration file.");
         }
     }
 
 
     /*
-     * @param
+     * @param configFileName string
      */
     public static function loadConfig($configFileName)
     {
