@@ -23,6 +23,17 @@ class PersistenceTest extends TestCase
     {
         parent::setUp();
         $this->configuration = new Configuration("site-analyzer.ini", FALSE);
+        
+        try{
+            $pdo = Persistence::getPDO($this->configuration);
+            $tablesExist = Persistence::checkTables($pdo, $this->configuration);
+            if($tablesExist){
+                Persistence::deleteDatabase($pdo, $this->configuration);
+            }
+        }
+        catch(Exception $e){
+            print($e->getMessage());
+        }
     }
     
     
@@ -42,42 +53,32 @@ class PersistenceTest extends TestCase
     {
         $this->persistence = null;
         parent::tearDown();
-    }
-
-    
-    /**
-     * Tests Persistence::deleteDatabase()
-     */
-    public function testDeleteDatabase()
-    {
-        $pdo = Persistence::getPDO($this->configuration);
-        $resp = Persistence::deleteDatabase($pdo, $this->configuration);
-        $this->assertTrue($resp);
-    }
-    
+    }    
 
 
     /**
      * Tests Persistence::crateDatabase()
      */
-    public function testCrateDatabase()
+    public function testCrateDeleteDatabase()
     {
-        // TODO Auto-generated PersistenceTest::testCrateDatabase()
-        $this->markTestIncomplete("crateDatabase test not implemented");
-
-        Persistence::crateDatabase(/* parameters */);
+        $pdo = Persistence::getPDO($this->configuration);
+        $resp = Persistence::crateDatabase($pdo, $this->configuration);
+        $this->assertTrue($resp);
+        
+        $resp = Persistence::deleteDatabase($pdo, $this->configuration);
+        $this->assertTrue($resp);
     }
-
 
     /**
      * Tests Persistence::checkTables()
      */
     public function testCheckTables()
     {
-        // TODO Auto-generated PersistenceTest::testCheckTables()
-        $this->markTestIncomplete("checkTables test not implemented");
-
-        Persistence::checkTables(/* parameters */);
+        $pdo = Persistence::getPDO($this->configuration);
+        Persistence::crateDatabase($pdo, $this->configuration);
+        
+        $resp = Persistence::checkTables($pdo, $this->configuration);
+        $this->assertTrue($resp);
     }
 
     /**
@@ -85,10 +86,11 @@ class PersistenceTest extends TestCase
      */
     public function testUpdateCount()
     {
-        // TODO Auto-generated PersistenceTest::testUpdateCount()
-        $this->markTestIncomplete("updateCount test not implemented");
-
-        Persistence::updateCount(/* parameters */);
+        $pdo = Persistence::getPDO($this->configuration);
+        Persistence::crateDatabase($pdo, $this->configuration);
+        
+        Persistence::updateCount($pdo, $this->configuration);
+        
     }
 
     /**

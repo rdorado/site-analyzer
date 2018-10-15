@@ -49,14 +49,16 @@ class Persistence{
             $db_from_table = $config->getFromTableName();
 
             $stmt = $pdo->prepare("CREATE TABLE $db_main_table (id VARCHAR(255), url VARCHAR(255), count INT)");
+            $stmt->execute();
             $stmt = $pdo->prepare("CREATE TABLE $db_options_table (id VARCHAR(255), time TIMESTAMP, user )");
-            $stmt = $pdo->prepare("CREATE TABLE $db_from_table (id1 VARCHAR(255), id2 VARCHAR(255))");
-
+            $stmt->execute();
+            $stmt = $pdo->prepare("CREATE TABLE $db_from_table (id VARCHAR(255), from_id VARCHAR(255))");
+            $stmt->execute();
         }
         catch(Exception $e){
-            throw new DatabaseException("Could not update the count.");
+            throw new DatabaseException("Could not create the database. ".$e->getMessage());
         }        
-        return $resp;
+        return true;
 
     }
 
@@ -101,18 +103,18 @@ class Persistence{
             $db_options_table = $config->getOptionsTableName();           
             $db_from_table = $config->getFromTableName();
 
-            $stmt = $pdo->prepare("SELECT id,url,count FROM $db_main_table WHERE 1 != 0");
+            $stmt = $pdo->prepare("SELECT id, url, count FROM $db_main_table");
             $stmt->execute();
             
-            $stmt = $pdo->prepare("SELECT id,time,user FROM $db_options_table WHERE 1 != 0");
+            $stmt = $pdo->prepare("SELECT id, time, user FROM $db_options_table");
             $stmt->execute();
             
-            $stmt = $pdo->prepare("SELECT id,from,count FROM $db_from_table WHERE 1 != 0");
+            $stmt = $pdo->prepare("SELECT id, from_id,count FROM $db_from_table");
             $stmt->execute();
 
         }
         catch(Exception $e){
-            throw new DatabaseException("Could not update the count.");
+            throw new DatabaseException("Could not check database existance. ".$e->getMessage());
         }        
         return true;
 
@@ -124,29 +126,82 @@ class Persistence{
      * @param $config Configuration
      *
      */
-    public static function updateCount($pdo, $config){
+    public static function updateCount($pdo, $config, $options=[]){
 
         try{
-
-            $id = '';
-            $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            $from_id = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
-            $id = $url;
-            $time = $config->getStoreTime() ? time() : 0;
-            $user = '';
-
-            $dbtable = $config->getCountTableName();
-
-            $stmt = $pdo->prepare("UPDATE $dbtable SET count = count + 1 WHERE id = ? AND url = ? AND from_id = ? AND time = ? AND user = ?");
-            $stmt->execute([$id, $url, $from_id, $time, $user]);
-            if( $stmt->rowCount() == 0 ){
-                $stmt = $pdo->prepare("INSERT INTO $dbtable (id, url, from_id, time, user, count) VALUES (?, ?, ?, ?, ?, 1)");
-                $stmt->execute([$id, $url, $from_id, $time, $user]);
+        
+            $db_main_table = $config->getMainTableName();
+            $db_options_table = $config->getOptionsTableName();
+            $db_from_table = $config->getFromTableName();            
+            $store_from = true;
+            $store_time = true;
+            $store_user = true;
+            
+            if(array_key_exists('url', $options)){
+                $url = $options['url'];
             }
+            else{
+                $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";                
+            }
+
+            if(array_key_exists('id', $options)){
+                $id = $options['id'];
+            }
+            else{
+                $id = $url;
+            }
+
+            $stmt = $pdo->prepare("UPDATE $db_main_table SET count = count + 1 WHERE id = ?");
+            $stmt->execute([$id]);
+            if( $stmt->rowCount() == 0 ){
+                $stmt = $pdo->prepare("INSERT INTO $db_main_table (id, url, count) VALUES (?, ?, 1)");
+                $stmt->execute([$id, $url]);
+            }
+
+            if($store_from){
+                if(array_key_exists('from_id', $options)){
+                    $from_id = $options['from_id'];
+                }
+                else{
+                    //TODO: look for id from url
+                    $from_id = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                }
+            
+                $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
+                $stmt->execute([$id, $from_id]);
+                
+                if( $stmt->rowCount() == 0 ){
+                    $stmt = $pdo->prepare("INSERT INTO $db_main_table (id, url, count) VALUES (?, ?, 1)");
+                    $stmt->execute([$id, $url]);
+                }
+            }
+            
+            $time = null;
+            if($store_time){
+                if(array_key_exists('time', $options)){
+                    $time = $options['time'];
+                }
+                else{
+                    $time = time();
+                }
+            }
+            
+            $user = null;
+            if($store_user){
+                if(array_key_exists('user', $options)){
+                    $user = $options['user'];
+                }    
+            }
+            
+            if($store_time || $store_user){
+                $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
+                $stmt->execute([$id, $time, $user]);
+            }
+                        
             $stmt = null;
         }
         catch(Exception $e){
-            throw new DatabaseException("Could not update the count.");
+            throw new DatabaseException("Could not update the count.".$e->getMessage());
         }        
     }
 

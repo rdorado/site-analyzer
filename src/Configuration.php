@@ -126,7 +126,10 @@ final class Configuration
         $this->mainTableName = $this->loadMandatoryVariable($config,"database","db_main_table");
         $this->optionsTableName = $this->loadMandatoryVariable($config,"database","db_options_table");
         $this->fromTableName = $this->loadMandatoryVariable($config,"database","db_from_table");
-        $this->storeTime = $this->loadMandatoryVariable($config,"counter","store_time");
+        
+        $this->storeTime = isset($config['options']['store_time']) ? strtolower($config['options']['store_time'])=="true" : false;
+        $this->storeTime = isset($config['options']['store_user']) ? strtolower($config['options']['store_user'])=="true" : false;
+        $this->storeTime = isset($config['options']['store_from_info']) ? strtolower($config['options']['store_from_info'])=="true" : false;
         
         $this->user = isset($config['database']['user']) ? $config['database']['user'] : NULL;
         $this->password = isset($config['database']['password']) ? $config['database']['password'] : NULL;
