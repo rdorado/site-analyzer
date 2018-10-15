@@ -1,11 +1,10 @@
 <?php
-use PHPUnit\Framework\TestCase;
-
 include 'src/Configuration.php';
+
+use PHPUnit\Framework\TestCase;
 
 final class ConfigurationTest extends TestCase
 {
-
 
     /**
      * @test
@@ -15,11 +14,15 @@ final class ConfigurationTest extends TestCase
     {
         $config = new Configuration("site-analyzer.ini", FALSE);
 
-        /* Test table Name */
-        $val = $config->getCountTableName(); 
+        /* Test get tables */
+        $val = $config->getMainTableName();
         $this->assertNotNull($val);
 
-
+        $val = $config->getOptionsTableName();
+        $this->assertNotNull($val);
+        
+        $val = $config->getFromTableName();
+        $this->assertNotNull($val);
     }
 
 
@@ -30,10 +33,12 @@ final class ConfigurationTest extends TestCase
     public function testLoadConfigurationWithPDO()
     {
         $config = new Configuration("site-analyzer.ini", TRUE);
+
+        $val = $config->getMainTableName();
+        $this->assertNotNull($val);
+        
         
         /*  */
-        $val = $config->getCountTableName();
-        $this->assertNull(  ); 
     }
 
 

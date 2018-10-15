@@ -39,8 +39,18 @@ final class Configuration
     /**
      * @var string
      */
-    protected $countTableName;
+    protected $mainTableName;
 
+    /**
+     * @var string
+     */
+    protected $optionsTableName;
+    
+    /**
+     * @var string
+     */
+    protected $fromTableName;
+    
     /**
      * @var string
      */
@@ -81,31 +91,45 @@ final class Configuration
     /*
      * @return string
      */
-    public function getCountTableName()
+    public function getMainTableName()
     {
-        return $this->countTableName;
+        
+        return $this->mainTableName;
     }
 
+    /*
+     * @return string
+     */
+    public function getOptionsTableName()
+    {
+        return $this->optionsTableName;
+    }
+    
+    /*
+     * @return string
+     */
+    public function getFromTableName()
+    {
+        return $this->fromTableName;
+    }
+    
     /*
      * @param configFileName
      */
     public function __construct($configFileName, $pdoProvided)
     {    
         $config = parse_ini_file($configFileName, TRUE); 
-        try{
-            if(!$pdoProvided){
-                $this->dsn = $this->loadMandatoryVariable($config,"database","dsn");
-            }
-
-            $this->countTableName = $this->loadMandatoryVariable($config,"database","count_table_name");
-            $this->storeTime = $this->loadMandatoryVariable($config,"counter","store_time"); 
-         }
-         catch(Exception $e){
-            throw new ConfigurationException("Error loading ");
-         }
-
-         $this->user = isset($config['database']['user']) ? $config['database']['user'] : NULL;
-         $this->password = isset($config['database']['password']) ? $config['database']['password'] : NULL;
+        if(!$pdoProvided){
+            $this->dsn = $this->loadMandatoryVariable($config,"database","dsn");
+        }
+        
+        $this->mainTableName = $this->loadMandatoryVariable($config,"database","db_main_table");
+        $this->optionsTableName = $this->loadMandatoryVariable($config,"database","db_options_table");
+        $this->fromTableName = $this->loadMandatoryVariable($config,"database","db_from_table");
+        $this->storeTime = $this->loadMandatoryVariable($config,"counter","store_time");
+        
+        $this->user = isset($config['database']['user']) ? $config['database']['user'] : NULL;
+        $this->password = isset($config['database']['password']) ? $config['database']['password'] : NULL;
     }
 
 
@@ -122,7 +146,7 @@ final class Configuration
             return $configFile[$section][$varname];
         }
         catch(Exception $e){
-            throw new ConfigurationException( "Error loading config file. Variable $varname in section $section not found. Check the configuration file.");
+            throw new ConfigurationException( "Error loading config file. Variable $varname in section [$section] not found. Check the configuration file.");
         }
     }
 

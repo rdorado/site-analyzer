@@ -72,16 +72,19 @@ class Persistence{
             $db_options_table = $config->getOptionsTableName();           
             $db_from_table = $config->getFromTableName();
 
-            $stmt = $pdo->prepare("CREATE TABLE $db_main_table (id VARCHAR(255), url VARCHAR(255), count INT)");
-            $stmt = $pdo->prepare("CREATE TABLE $db_options_table (id VARCHAR(255), time TIMESTAMP, user )");
-            $stmt = $pdo->prepare("CREATE TABLE $db_from_table (id1 VARCHAR(255), id2 VARCHAR(255))");
-
+            $stmt = $pdo->prepare("DROP TABLE $db_main_table");
+            $stmt->execute();
+            
+            $stmt = $pdo->prepare("DROP TABLE $db_options_table");
+            $stmt->execute();
+            
+            $stmt = $pdo->prepare("DROP TABLE $db_from_table");
+            $stmt->execute();
         }
         catch(Exception $e){
-            throw new DatabaseException("Could not update the count.");
+            throw new DatabaseException("Problem deleting the tables. ".$e->getMessage());
         }        
-        return $resp;
-
+        return true;
     }
 
 
@@ -99,14 +102,19 @@ class Persistence{
             $db_from_table = $config->getFromTableName();
 
             $stmt = $pdo->prepare("SELECT id,url,count FROM $db_main_table WHERE 1 != 0");
+            $stmt->execute();
+            
             $stmt = $pdo->prepare("SELECT id,time,user FROM $db_options_table WHERE 1 != 0");
+            $stmt->execute();
+            
             $stmt = $pdo->prepare("SELECT id,from,count FROM $db_from_table WHERE 1 != 0");
+            $stmt->execute();
 
         }
         catch(Exception $e){
             throw new DatabaseException("Could not update the count.");
         }        
-        return $resp;
+        return true;
 
     }
 
