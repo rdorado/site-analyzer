@@ -26,13 +26,9 @@ class PersistenceTest extends TestCase
         
         try{
             $pdo = Persistence::getPDO($this->configuration);
-            $tablesExist = Persistence::checkTables($pdo, $this->configuration);
-            if($tablesExist){
-                Persistence::deleteDatabase($pdo, $this->configuration);
-            }
+            Persistence::deleteDatabase($pdo, $this->configuration);
         }
         catch(Exception $e){
-            print($e->getMessage());
         }
     }
     
@@ -62,11 +58,22 @@ class PersistenceTest extends TestCase
     public function testCrateDeleteDatabase()
     {
         $pdo = Persistence::getPDO($this->configuration);
+        try{
+            Persistence::deleteDatabase($pdo, $this->configuration);
+        }
+        catch(Exception $e) {};
+        
         $resp = Persistence::crateDatabase($pdo, $this->configuration);
+        $this->assertTrue($resp);
+        
+        $resp = Persistence::checkTables($pdo, $this->configuration);
         $this->assertTrue($resp);
         
         $resp = Persistence::deleteDatabase($pdo, $this->configuration);
         $this->assertTrue($resp);
+        
+        $resp = Persistence::checkTables($pdo, $this->configuration);
+        $this->assertFalse($resp);
     }
 
     /**
@@ -75,10 +82,40 @@ class PersistenceTest extends TestCase
     public function testCheckTables()
     {
         $pdo = Persistence::getPDO($this->configuration);
-        Persistence::crateDatabase($pdo, $this->configuration);
+        try{ 
+           Persistence::crateDatabase($pdo, $this->configuration);
+        }
+        catch(Exception $e) {};
+        
+        $resp = Persistence::checkMainTable($pdo, $this->configuration);
+        $this->assertTrue($resp);
+        
+        $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
+        $this->assertTrue($resp);
+        
+        $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
+        $this->assertTrue($resp);
         
         $resp = Persistence::checkTables($pdo, $this->configuration);
         $this->assertTrue($resp);
+
+        try{
+            Persistence::deleteDatabase($pdo, $this->configuration);
+        }
+        catch(Exception $e) {};
+        
+        $resp = Persistence::checkMainTable($pdo, $this->configuration);
+        $this->assertFalse($resp);
+        
+        $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
+        $this->assertFalse($resp);
+        
+        $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
+        $this->assertFalse($resp);
+        
+        $resp = Persistence::checkTables($pdo, $this->configuration);
+        $this->assertFalse($resp);
+        
     }
 
     /**
@@ -87,8 +124,12 @@ class PersistenceTest extends TestCase
     public function testUpdateCount()
     {
         $pdo = Persistence::getPDO($this->configuration);
-        Persistence::crateDatabase($pdo, $this->configuration);
+        try{
+            Persistence::deleteDatabase($pdo, $this->configuration);
+        }
+        catch(Exception $e) {};
         
+        Persistence::crateDatabase($pdo, $this->configuration);         
         Persistence::updateCount($pdo, $this->configuration);
         
     }

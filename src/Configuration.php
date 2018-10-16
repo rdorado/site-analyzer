@@ -56,6 +56,21 @@ final class Configuration
      */
     protected $storeTime;
 
+    /**
+     * @var string
+     */
+    protected $storeUser;
+    
+    /**
+     * @var string
+     */
+    protected $storeFromInfo;
+    
+    /**
+     * @var string
+     */
+    protected $removeQueryString;
+    
     /*
      * @return string
      */
@@ -97,6 +112,17 @@ final class Configuration
         return $this->mainTableName;
     }
 
+    
+    /*
+     * @return string
+     */
+    public function getRemoveQueryString()
+    {
+        
+        return $this->removeQueryString;
+    }
+    
+
     /*
      * @return string
      */
@@ -128,8 +154,9 @@ final class Configuration
         $this->fromTableName = $this->loadMandatoryVariable($config,"database","db_from_table");
         
         $this->storeTime = isset($config['options']['store_time']) ? strtolower($config['options']['store_time'])=="true" : false;
-        $this->storeTime = isset($config['options']['store_user']) ? strtolower($config['options']['store_user'])=="true" : false;
-        $this->storeTime = isset($config['options']['store_from_info']) ? strtolower($config['options']['store_from_info'])=="true" : false;
+        $this->storeUser = isset($config['options']['store_user']) ? strtolower($config['options']['store_user'])=="true" : false;
+        $this->storeFromInfo = isset($config['options']['store_from_info']) ? strtolower($config['options']['store_from_info'])=="true" : false;
+        $this->removeQueryString = isset($config['options']['remove_query_string']) ? strtolower($config['options']['store_from_info'])=="true" : false;
         
         $this->user = isset($config['database']['user']) ? $config['database']['user'] : NULL;
         $this->password = isset($config['database']['password']) ? $config['database']['password'] : NULL;

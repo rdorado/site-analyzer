@@ -50,9 +50,9 @@ class Persistence{
 
             $stmt = $pdo->prepare("CREATE TABLE $db_main_table (id VARCHAR(255), url VARCHAR(255), count INT)");
             $stmt->execute();
-            $stmt = $pdo->prepare("CREATE TABLE $db_options_table (id VARCHAR(255), time TIMESTAMP, user )");
+            $stmt = $pdo->prepare("CREATE TABLE $db_options_table (id VARCHAR(255), time TIMESTAMP, user VARCHAR(255))");
             $stmt->execute();
-            $stmt = $pdo->prepare("CREATE TABLE $db_from_table (id VARCHAR(255), from_id VARCHAR(255))");
+            $stmt = $pdo->prepare("CREATE TABLE $db_from_table (id VARCHAR(255), from_id VARCHAR(255), count INT)");
             $stmt->execute();
         }
         catch(Exception $e){
@@ -69,26 +69,18 @@ class Persistence{
      *
      */
     public static function deleteDatabase($pdo, $config){
-        try{
-            $db_main_table = $config->getMainTableName();
-            $db_options_table = $config->getOptionsTableName();           
-            $db_from_table = $config->getFromTableName();
-
-            $stmt = $pdo->prepare("DROP TABLE $db_main_table");
-            $stmt->execute();
-            
-            $stmt = $pdo->prepare("DROP TABLE $db_options_table");
-            $stmt->execute();
-            
-            $stmt = $pdo->prepare("DROP TABLE $db_from_table");
-            $stmt->execute();
-        }
-        catch(Exception $e){
-            throw new DatabaseException("Problem deleting the tables. ".$e->getMessage());
-        }        
-        return true;
+        $resp = true;
+        
+        $db_main_table = $config->getMainTableName();
+        $db_options_table = $config->getOptionsTableName();
+        $db_from_table = $config->getFromTableName();
+        
+        $resp = $resp && Persistence::dropTable($pdo, $db_main_table);
+        $resp = $resp && Persistence::dropTable($pdo, $db_options_table);
+        $resp = $resp && Persistence::dropTable($pdo, $db_from_table);
+        
+        return $resp;
     }
-
 
 
     /*
@@ -96,31 +88,90 @@ class Persistence{
      * @param $config Configuration
      *
      */
-    public static function checkTables($pdo, $config){
+    private static function dropTable($pdo, $tableName){
         try{
-
-            $db_main_table = $config->getMainTableName();
-            $db_options_table = $config->getOptionsTableName();           
-            $db_from_table = $config->getFromTableName();
-
-            $stmt = $pdo->prepare("SELECT id, url, count FROM $db_main_table");
-            $stmt->execute();
             
-            $stmt = $pdo->prepare("SELECT id, time, user FROM $db_options_table");
+            $stmt = $pdo->prepare("DROP TABLE $tableName");
             $stmt->execute();
-            
-            $stmt = $pdo->prepare("SELECT id, from_id,count FROM $db_from_table");
-            $stmt->execute();
-
+           
         }
         catch(Exception $e){
-            throw new DatabaseException("Could not check database existance. ".$e->getMessage());
-        }        
+            throw new DatabaseException("Problem deleting the table $tableName. ".$e->getMessage());
+        }
         return true;
+    }
+    
+
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function checkTables($pdo, $config){
+        $resp = true;      
+        try{
+            
+            $resp = $resp && Persistence::checkMainTable($pdo, $config);
+            $resp = $resp && Persistence::checkOptionsTable($pdo, $config);
+            $resp = $resp && Persistence::checkFromTable($pdo, $config);
+            
+        }
+        catch(Exception $e){
+            return false;
+        }        
+        return $resp;
 
     }
 
-
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     */
+    public static function checkFromTable($pdo, $config){
+        try{
+            $db_from_table = $config->getFromTableName();
+            $stmt = $pdo->prepare("SELECT * FROM $db_from_table WHERE 1==0");
+            $stmt->execute();
+            
+        }
+        catch(Exception $e){
+            return false;
+        }
+        return true;
+    }
+        
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     */
+    public static function checkOptionsTable($pdo, $config){
+        try{
+            $db_options_table = $config->getOptionsTableName();
+            $stmt = $pdo->prepare("SELECT * FROM $db_options_table WHERE 1==0");
+            $stmt->execute();
+        }
+        catch(Exception $e){
+            return false;
+        }
+        return true;
+    }
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     */
+    public static function checkMainTable($pdo, $config){
+        try{
+            $db_main_table = $config->getMainTableName();
+            $stmt = $pdo->prepare("SELECT * FROM $db_main_table WHERE 1==0");
+            $stmt->execute();            
+        }
+        catch(Exception $e){
+            return false;
+        }
+        return true;        
+    }
+        
     /*
      * @param $pdo PDO
      * @param $config Configuration
@@ -133,6 +184,7 @@ class Persistence{
             $db_main_table = $config->getMainTableName();
             $db_options_table = $config->getOptionsTableName();
             $db_from_table = $config->getFromTableName();            
+
             $store_from = true;
             $store_time = true;
             $store_user = true;
@@ -140,10 +192,21 @@ class Persistence{
             if(array_key_exists('url', $options)){
                 $url = $options['url'];
             }
+            else if(array_key_exists('HTTP_HOST',$_SERVER)){
+                $url = "http://".$_SERVER['HTTP_HOST'];
+                if(array_key_exists('REQUEST_URI',$_SERVER)){
+                    $url=$url.$_SERVER['REQUEST_URI'];
+                }
+                
+            }
             else{
-                $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";                
+                $url = "No Info";
             }
 
+            if($config->getRemoveQueryString()){
+                $url = preg_replace('/\?.*/', '', $url);
+            }
+            
             if(array_key_exists('id', $options)){
                 $id = $options['id'];
             }
@@ -160,32 +223,25 @@ class Persistence{
 
             if($store_from){
                 if(array_key_exists('from_id', $options)){
-                    $from_id = $options['from_id'];
+                    $ids = [$options['from_id']];
                 }
                 else{
-                    //TODO: look for id from url
-                    $from_id = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                    $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                    $ids = Persistence::findHitsByUrl($from_url);
+                    
                 }
-            
-                $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
-                $stmt->execute([$id, $from_id]);
+                 
+                foreach ($ids as $from_id) {
+                    $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
+                    $stmt->execute([$id, $from_id]);
                 
-                if( $stmt->rowCount() == 0 ){
-                    $stmt = $pdo->prepare("INSERT INTO $db_main_table (id, url, count) VALUES (?, ?, 1)");
-                    $stmt->execute([$id, $url]);
+                    if( $stmt->rowCount() == 0 ){
+                        $stmt = $pdo->prepare("INSERT INTO $db_from_table (id, from_id, count) VALUES (?, ?, 1)");
+                        $stmt->execute([$id, $from_id]);
+                    }
                 }
             }
-            
-            $time = null;
-            if($store_time){
-                if(array_key_exists('time', $options)){
-                    $time = $options['time'];
-                }
-                else{
-                    $time = time();
-                }
-            }
-            
+                        
             $user = null;
             if($store_user){
                 if(array_key_exists('user', $options)){
@@ -195,7 +251,7 @@ class Persistence{
             
             if($store_time || $store_user){
                 $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
-                $stmt->execute([$id, $time, $user]);
+                $stmt->execute([$id, time(), $user]);
             }
                         
             $stmt = null;
@@ -205,6 +261,30 @@ class Persistence{
         }        
     }
 
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function findHitsByUrl($pdo, $config, $url){
+        $resp = [];
+        try{
+            
+            $dbtable = $config->getMainTableName();
+            $stmt = $pdo->prepare("SELECT id,url,count FROM $dbtable WHERE url = '$url'");
+            if($stmt->execute()){
+                while($row = $stmt->fetch()){
+                    $resp[] = [$row['id'],$row['url'],$row['count']];
+                }
+            }
+        }
+        catch(Exception $e){
+            throw new DatabaseException("Error executing function 'findHitsByUrl'. ".$e->getMessage());
+        }
+        return $resp;
+        
+    }
+    
     /*
      * @param $pdo PDO
      * @param $config Configuration
