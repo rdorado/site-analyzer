@@ -185,50 +185,23 @@ class PersistenceTest extends TestCase
         Persistence::updateCount($pdo, $this->configuration);
         $resp = Persistence::findUrls($pdo, $this->configuration);        
         $this->assertEquals(count($resp), 1);
-        $this->printTable($resp);
-
+        
         $insert_options = ['url' => 'http://test.test'];
         Persistence::updateCount($pdo, $this->configuration, $insert_options);
         $find_options = ['url' => 'http://test.test'];
         $resp = Persistence::findUrls($pdo, $this->configuration, $find_options);
-        $this->assertEquals(count($resp), 2);
-        //$this->printTable($resp);
+        $this->assertEquals(count($resp), 1);        
         
         $insert_options = ['url' => 'http://test.test', 'id' => 'No Info'];
         Persistence::updateCount($pdo, $this->configuration, $insert_options);
         Persistence::updateCount($pdo, $this->configuration);
         $find_options = ['url' => 'http://test.test'];
         $resp = Persistence::findUrls($pdo, $this->configuration, $find_options);
-        $this->assertEquals(count($resp), 3);
+        $this->assertEquals(count($resp), 2);
         
-        //$this->printTable($resp);
-
         $resp = Persistence::findUrls($pdo, $this->configuration);
         $this->assertEquals(count($resp), 3);
         
-        
-        /*$this->assertEquals(count($resp), 1);
-        $this->assertEquals($resp[0][1], 1);
-        
-        $options = ["id"=>"Page 1"];
-        Persistence::updateCount($pdo, $this->configuration, $options);
-        $resp = Persistence::getAllUrls($pdo, $this->configuration);
-        
-        $this->assertEquals(count($resp), 2);
-        
-        $options = ["id"=>"Page 2"];
-        Persistence::updateCount($pdo, $this->configuration, $options);
-        Persistence::updateCount($pdo, $this->configuration);
-        $options = ["id"=>"Page 1"];
-        Persistence::updateCount($pdo, $this->configuration, $options);
-        $resp = Persistence::getAllHits($pdo, $this->configuration);
-        
-        $this->assertEquals(count($resp), 3);
-        foreach($resp as $row){
-            if($row[0]=="Page 1") $this->assertEquals($row[1], 2);
-            else if($row[0]=="Page 2") $this->assertEquals($row[1], 1);
-            else if($row[0]=="No Info") $this->assertEquals($row[1], 2);
-        }*/
     }
     
 
@@ -246,15 +219,55 @@ class PersistenceTest extends TestCase
         
         Persistence::crateDatabase($pdo, $this->configuration);
 
-        //Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $insert_options = ['url' => 'http://test.test', 'user' => '1'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+                
         Persistence::updateCount($pdo, $this->configuration);
-        
-        
         $resp = Persistence::findIdByTimeUser($pdo, $this->configuration);        
-        //$this->printTable($resp);
+        $this->assertEquals(count($resp), 2);
+                
+        $find_options = ['from' => strtotime("1/8/2018")];
+        $resp = Persistence::findIdByTimeUser($pdo, $this->configuration, $find_options);
+        $this->assertEquals(count($resp), 2);
         
-        //$insert_options = ['url' => 'http://test.test', 'user' => '1'];
-        //$find_options = ['from' => strtotime("1/8/2018")];
+        $time1 = time();
+        $insert_options = ['id' => 'Page 2', 'url' => 'http://page2.test', 'user' => '2'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $insert_options = ['id' => 'Page 1', 'url' => 'http://page1.test', 'user' => '2'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $insert_options = ['id' => 'Page 2', 'url' => 'http://page2.test', 'user' => '1'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $insert_options = ['id' => 'Page 2', 'url' => 'http://page2.test', 'user' => '2'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $insert_options = ['id' => 'Page 1', 'url' => 'http://page1.test', 'user' => '2'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        
+        $time2 = time();
+        $insert_options = ['id' => 'Page 1', 'url' => 'http://page1.test', 'user' => '1'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $insert_options = ['id' => 'Page 2', 'url' => 'http://page2.test', 'user' => '1'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $insert_options = ['id' => 'Page 1', 'url' => 'http://page1.test', 'user' => '1'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        
+        $resp = Persistence::findIdByTimeUser($pdo, $this->configuration);
+        $this->assertEquals(count($resp), 10);        
+        
+        print("t1: $time1, ts: $time2");
+        $find_options = ['from' => $time1, 'user' => 1];
+        $resp = Persistence::findIdByTimeUser($pdo, $this->configuration, $find_options);
+        //$this->assertEquals(count($resp), 4);
+        
+        
+        $find_options = ['user' => '2'];
+        $resp = Persistence::findIdByTimeUser($pdo, $this->configuration, $find_options);
+        $this->assertEquals(count($resp), 4);
+        
+        
+        $find_options = ['to'=> $time1, 'user' => 1];
+        $resp = Persistence::findIdByTimeUser($pdo, $this->configuration, $find_options);
+        //$this->printTable($resp);
+        //$this->assertEquals(count($resp), 2);
         
     }
     
@@ -277,10 +290,9 @@ class PersistenceTest extends TestCase
         Persistence::updateCount($pdo, $this->configuration, $insert_options);
         Persistence::updateCount($pdo, $this->configuration);
         $find_options = ['url' => 'http://test.test'];
-        $resp = Persistence::findUrls($pdo, $this->configuration, $find_options);
-        
+        $resp = Persistence::findByFrom($pdo, $this->configuration, $find_options);        
         $this->printTable($resp);
-        
+        $this->assertEquals(count($resp), 4);
     }
     
     

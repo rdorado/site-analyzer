@@ -391,14 +391,19 @@ class Persistence{
             $dbtable = $config->getOptionsTableName();
             $qdata = [];
             $tquery = [];
-            if(array_key_exists('id',$by)){
-                $qdata[] = $by['id'];
-                $tquery[] = "id = ?";
+            if(array_key_exists('from',$by)){
+                $qdata[] = $by['from'];
+                $tquery[] = "time >= ?";
             }
             
-            if(array_key_exists('url',$by)){
-                $qdata[] = $by['url'];
-                $tquery[] = "url = ?";
+            if(array_key_exists('to',$by)){
+                $qdata[] = $by['to'];
+                $tquery[] = "time <= ?";
+            }
+            
+            if(array_key_exists('user',$by)){
+                $qdata[] = $by['user'];
+                $tquery[] = "user = ?";
             }
             
             $sql = "SELECT id,time,user FROM $dbtable";
