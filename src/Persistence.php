@@ -425,6 +425,57 @@ class Persistence{
         return $resp;
     }
     
+
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function findByFrom($pdo, $config, $by=[]){
+        $resp = [];
+        try{
+            $dbtable = $config->getFromTableName();
+            $qdata = [];
+            $tquery = [];
+            
+            both:
+            "SELECT * FROM  from f,url u WHERE (f.from_id = u.id and f.url = ?) or f.from_id = ?"
+            id:
+            "SELECT f.* FROM  from f where f.from_id = ?"
+            url:
+            "SELECT f.* FROM  from f, url u where f.from_id = u.id and u.url = ?"
+            none:
+            "SELECT f.* FROM  from f"
+                
+            if(array_key_exists('url',$by)){
+                $qdata[] = $by['from'];
+                $tquery[] = "";
+            }
+            
+            if(array_key_exists('id',$by)){
+                $qdata[] = $by['to'];
+                $tquery[] = "time <= ?";
+            }
+                        
+            $sql = "SELECT id,time,user FROM $dbtable";
+            if(count($tquery) > 0){
+                $sql = $sql." WHERE ".join(" AND ",$tquery);
+            }
+            
+            $stmt = $pdo->prepare($sql);
+            if($stmt->execute($qdata)){
+                while($row = $stmt->fetch()){
+                    $resp[] = [$row['id'],$row['time'],$row['user']];
+                }
+            }
+            
+        }
+        catch(Exception $e){
+            throw new DatabaseException("Error executing function 'getAllUrls'. ".$e->getMessage());
+        }
+        return $resp;
+    }
+    
     
     
     /*
