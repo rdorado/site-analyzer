@@ -15,7 +15,7 @@ final class ConfigurationTest extends TestCase
         $config = new Configuration("site-analyzer.ini", FALSE);
 
         /* Test get tables */
-        $val = $config->getMainTableName();
+        $val = $config->getHitTableName();
         $this->assertNotNull($val);
 
         $val = $config->getOptionsTableName();
@@ -34,7 +34,7 @@ final class ConfigurationTest extends TestCase
     {
         $config = new Configuration("site-analyzer.ini", TRUE);
 
-        $val = $config->getMainTableName();
+        $val = $config->getHitTableName();
         $this->assertNotNull($val);
         
         

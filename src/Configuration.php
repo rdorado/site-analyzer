@@ -39,7 +39,7 @@ final class Configuration
     /**
      * @var string
      */
-    protected $mainTableName;
+    protected $hitTableName;
 
     /**
      * @var string
@@ -106,10 +106,10 @@ final class Configuration
     /*
      * @return string
      */
-    public function getMainTableName()
+    public function getHitTableName()
     {
         
-        return $this->mainTableName;
+        return $this->hitTableName;
     }
 
     
@@ -138,6 +138,14 @@ final class Configuration
     {
         return $this->fromTableName;
     }
+
+    /*
+     * @return string
+     */
+    public function getUrlTableName()
+    {
+        return $this->urlTableName;
+    }
     
     /*
      * @param configFileName
@@ -149,14 +157,15 @@ final class Configuration
             $this->dsn = $this->loadMandatoryVariable($config,"database","dsn");
         }
         
-        $this->mainTableName = $this->loadMandatoryVariable($config,"database","db_main_table");
+        $this->hitTableName = $this->loadMandatoryVariable($config,"database","db_hit_table");
+        $this->fromTableName = $this->loadMandatoryVariable($config,"database","db_from_table");        
         $this->optionsTableName = $this->loadMandatoryVariable($config,"database","db_options_table");
-        $this->fromTableName = $this->loadMandatoryVariable($config,"database","db_from_table");
+        $this->urlTableName = $this->loadMandatoryVariable($config,"database","db_url_table");
         
-        $this->storeTime = isset($config['options']['store_time']) ? strtolower($config['options']['store_time'])=="true" : false;
-        $this->storeUser = isset($config['options']['store_user']) ? strtolower($config['options']['store_user'])=="true" : false;
-        $this->storeFromInfo = isset($config['options']['store_from_info']) ? strtolower($config['options']['store_from_info'])=="true" : false;
-        $this->removeQueryString = isset($config['options']['remove_query_string']) ? strtolower($config['options']['store_from_info'])=="true" : false;
+        $this->storeTime = isset($config['options']['store_time']) ? strtolower($config['options']['store_time'])=="yes" : false;
+        $this->storeUser = isset($config['options']['store_user']) ? strtolower($config['options']['store_user'])=="yes" : false;
+        $this->storeFromInfo = isset($config['options']['store_from_info']) ? strtolower($config['options']['store_from_info'])=="yes|" : false;
+        $this->removeQueryString = isset($config['options']['remove_query_string']) ? strtolower($config['options']['store_from_info'])=="yes" : false;
         
         $this->user = isset($config['database']['user']) ? $config['database']['user'] : NULL;
         $this->password = isset($config['database']['password']) ? $config['database']['password'] : NULL;

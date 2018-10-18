@@ -87,7 +87,7 @@ class PersistenceTest extends TestCase
         }
         catch(Exception $e) {};
         
-        $resp = Persistence::checkMainTable($pdo, $this->configuration);
+        $resp = Persistence::checkHitTable($pdo, $this->configuration);
         $this->assertTrue($resp);
         
         $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
@@ -104,7 +104,7 @@ class PersistenceTest extends TestCase
         }
         catch(Exception $e) {};
         
-        $resp = Persistence::checkMainTable($pdo, $this->configuration);
+        $resp = Persistence::checkHitTable($pdo, $this->configuration);
         $this->assertFalse($resp);
         
         $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
@@ -119,9 +119,21 @@ class PersistenceTest extends TestCase
     }
 
     /**
-     * Tests Persistence::updateCount()
+     * printTable() : use for development/debug purposes
      */
-    public function testUpdateCount()
+    public function printTable($data)
+    {
+        print("\n");
+        foreach ($data as $row){
+            print("'".join("','",$row)."'\n");
+        }
+    }
+    
+    
+    /**
+     * Tests Persistence::updateHits()
+     */
+    public function testUpdateHits()
     {
         $pdo = Persistence::getPDO($this->configuration);
         try{
@@ -131,9 +143,147 @@ class PersistenceTest extends TestCase
         
         Persistence::crateDatabase($pdo, $this->configuration);         
         Persistence::updateCount($pdo, $this->configuration);
+        $resp = Persistence::getAllHits($pdo, $this->configuration);
         
+        $this->assertEquals(count($resp), 1);
+        $this->assertEquals($resp[0][1], 1);
+
+        $options = ["id"=>"Page 1"];
+        Persistence::updateCount($pdo, $this->configuration, $options);
+        $resp = Persistence::getAllHits($pdo, $this->configuration);
+        
+        $this->assertEquals(count($resp), 2);
+        
+        $options = ["id"=>"Page 2"];
+        Persistence::updateCount($pdo, $this->configuration, $options);
+        Persistence::updateCount($pdo, $this->configuration);
+        $options = ["id"=>"Page 1"];
+        Persistence::updateCount($pdo, $this->configuration, $options);
+        $resp = Persistence::getAllHits($pdo, $this->configuration);
+        
+        $this->assertEquals(count($resp), 3);
+        foreach($resp as $row){
+            if($row[0]=="Page 1") $this->assertEquals($row[1], 2);
+            else if($row[0]=="Page 2") $this->assertEquals($row[1], 1);
+            else if($row[0]=="No Info") $this->assertEquals($row[1], 2);
+        }        
     }
 
+    
+    /**
+     * Tests Persistence::updateHits()
+     */
+    public function testUpdateUrls()
+    {
+        $pdo = Persistence::getPDO($this->configuration);
+        try{
+            Persistence::deleteDatabase($pdo, $this->configuration);
+        }
+        catch(Exception $e) {};
+        
+        Persistence::crateDatabase($pdo, $this->configuration);
+        Persistence::updateCount($pdo, $this->configuration);
+        $resp = Persistence::findUrls($pdo, $this->configuration);        
+        $this->assertEquals(count($resp), 1);
+        $this->printTable($resp);
+
+        $insert_options = ['url' => 'http://test.test'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $find_options = ['url' => 'http://test.test'];
+        $resp = Persistence::findUrls($pdo, $this->configuration, $find_options);
+        $this->assertEquals(count($resp), 2);
+        //$this->printTable($resp);
+        
+        $insert_options = ['url' => 'http://test.test', 'id' => 'No Info'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        Persistence::updateCount($pdo, $this->configuration);
+        $find_options = ['url' => 'http://test.test'];
+        $resp = Persistence::findUrls($pdo, $this->configuration, $find_options);
+        $this->assertEquals(count($resp), 3);
+        
+        //$this->printTable($resp);
+
+        $resp = Persistence::findUrls($pdo, $this->configuration);
+        $this->assertEquals(count($resp), 3);
+        
+        
+        /*$this->assertEquals(count($resp), 1);
+        $this->assertEquals($resp[0][1], 1);
+        
+        $options = ["id"=>"Page 1"];
+        Persistence::updateCount($pdo, $this->configuration, $options);
+        $resp = Persistence::getAllUrls($pdo, $this->configuration);
+        
+        $this->assertEquals(count($resp), 2);
+        
+        $options = ["id"=>"Page 2"];
+        Persistence::updateCount($pdo, $this->configuration, $options);
+        Persistence::updateCount($pdo, $this->configuration);
+        $options = ["id"=>"Page 1"];
+        Persistence::updateCount($pdo, $this->configuration, $options);
+        $resp = Persistence::getAllHits($pdo, $this->configuration);
+        
+        $this->assertEquals(count($resp), 3);
+        foreach($resp as $row){
+            if($row[0]=="Page 1") $this->assertEquals($row[1], 2);
+            else if($row[0]=="Page 2") $this->assertEquals($row[1], 1);
+            else if($row[0]=="No Info") $this->assertEquals($row[1], 2);
+        }*/
+    }
+    
+
+    /**
+     * Tests Persistence::updateHits()
+     */
+    public function testUpdateTimeAndUser()
+    {
+        $pdo = Persistence::getPDO($this->configuration);
+        try{
+            Persistence::deleteDatabase($pdo, $this->configuration);
+        }
+        catch(Exception $e) {};
+        
+        
+        Persistence::crateDatabase($pdo, $this->configuration);
+
+        //Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        Persistence::updateCount($pdo, $this->configuration);
+        
+        
+        $resp = Persistence::findIdByTimeUser($pdo, $this->configuration);        
+        //$this->printTable($resp);
+        
+        //$insert_options = ['url' => 'http://test.test', 'user' => '1'];
+        //$find_options = ['from' => strtotime("1/8/2018")];
+        
+    }
+    
+
+    
+    /**
+     * Tests Persistence::updateHits()
+     */
+    public function testInsertFrom()
+    {
+        $pdo = Persistence::getPDO($this->configuration);
+        try{
+            Persistence::deleteDatabase($pdo, $this->configuration);
+        }
+        catch(Exception $e) {};
+        
+        Persistence::crateDatabase($pdo, $this->configuration);
+
+        $insert_options = ['url' => 'http://test.test', 'id' => 'No Info'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        Persistence::updateCount($pdo, $this->configuration);
+        $find_options = ['url' => 'http://test.test'];
+        $resp = Persistence::findUrls($pdo, $this->configuration, $find_options);
+        
+        $this->printTable($resp);
+        
+    }
+    
+    
     /**
      * Tests Persistence::getCounts()
      */
@@ -145,15 +295,5 @@ class PersistenceTest extends TestCase
         Persistence::getCounts(/* parameters */);
     }
 
-    /**
-     * Tests Persistence::getCountsById()
-     */
-    public function testGetCountsById()
-    {
-        // TODO Auto-generated PersistenceTest::testGetCountsById()
-        $this->markTestIncomplete("getCountsById test not implemented");
-
-        Persistence::getCountsById(/* parameters */);
-    }
 }
 
