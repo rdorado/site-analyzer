@@ -149,7 +149,7 @@ final class Configuration
     
     /*
      * @param configFileName
-     */
+     */x|
     public function __construct($configFileName, $pdoProvided=FALSE)
     {    
         $config = parse_ini_file($configFileName, TRUE); 

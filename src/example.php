@@ -2,6 +2,8 @@
 
 include_once 'SiteAnalyzer.php';
 
+use SiteAnalyzer\SiteAnalyzer;
+
 $r1 = rand(1,3);
 $r2 = rand(1,10);
 print("<a href='example.php?id=$r1'>Ref</a>");

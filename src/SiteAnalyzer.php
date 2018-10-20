@@ -6,9 +6,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace SiteAnalyzer;
 
 include_once 'Configuration.php';
 include_once 'Persistence.php';
+
 
 /**
  * class SiteAnalyzer
