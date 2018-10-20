@@ -13,7 +13,7 @@ include_once 'exceptions.php';
 /**
  * class SiteAnalyzer
  *
- * @package   SiteAnalyzer
+ * @package   SiteAnalyzer		
  * @author    Ruben Dorado <ruben.dorados@gmail.com>
  * @copyright 2018 Ruben Dorado
  * @license   http://www.opensource.org/licenses/MIT The MIT License
@@ -150,7 +150,7 @@ final class Configuration
     /*
      * @param configFileName
      */
-    public function __construct($configFileName, $pdoProvided)
+    public function __construct($configFileName, $pdoProvided=FALSE)
     {    
         $config = parse_ini_file($configFileName, TRUE); 
         if(!$pdoProvided){

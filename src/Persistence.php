@@ -31,7 +31,7 @@ class Persistence{
             return new PDO($config->getDsn(),$config->getUser(),$config->getPassword(),$options);
          }
          catch(Exception $e){
-            throw new PersistenceException("Could not create pdo connection.");
+            throw new PersistenceException("Could not create a db connection.");
          }
     }
 
@@ -252,18 +252,22 @@ class Persistence{
             
             
             if($store_from){
+                            
                 if(array_key_exists('from_id', $options)){
                     $ids = [$options['from_id']];
                 }
                 else{
-                    $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                    $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'No referer info';
                     $ids = Persistence::findHitIdsByUrl($pdo,$config,$from_url); 
+                    if(count($ids)==0){
+                        $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
+                        $stmt->execute([$from_url, $from_url]);
+                        $ids = [$from_url];
+                    }
                 }
-                 
                 foreach ($ids as $from_id) {
                     $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
                     $stmt->execute([$id, $from_id]);
-                
                     if( $stmt->rowCount() == 0 ){
                         $stmt = $pdo->prepare("INSERT INTO $db_from_table (id, from_id, count) VALUES (?, ?, 1)");
                         $stmt->execute([$id, $from_id]);
@@ -434,44 +438,38 @@ class Persistence{
     public static function findByFrom($pdo, $config, $by=[]){
         $resp = [];
         try{
-            $dbtable = $config->getFromTableName();
+            $dbFromtable = $config->getFromTableName();
+            $dbUrltable = $config->getUrlTableName();
             $qdata = [];
             $tquery = [];
             
-            both:
-            "SELECT * FROM  from f,url u WHERE (f.from_id = u.id and f.url = ?) or f.from_id = ?"
-            id:
-            "SELECT f.* FROM  from f where f.from_id = ?"
-            url:
-            "SELECT f.* FROM  from f, url u where f.from_id = u.id and u.url = ?"
-            none:
-            "SELECT f.* FROM  from f"
-                
-            if(array_key_exists('url',$by)){
-                $qdata[] = $by['from'];
-                $tquery[] = "";
+            if(array_key_exists('url',$by) && array_key_exists('id',$by)){
+                $qdata = [$by['url'], $by['id']];
+                $tquery = "SELECT f.* FROM  $dbFromtable f,$dbUrltable u WHERE (f.from_id = u.id and f.url = ?) or f.from_id = ?";                
             }
-            
-            if(array_key_exists('id',$by)){
-                $qdata[] = $by['to'];
-                $tquery[] = "time <= ?";
+            else if(array_key_exists('url',$by)){
+                $qdata = [$by['url']];
+                $tquery = "SELECT f.* FROM $dbFromtable f,$dbUrltable u where f.from_id = u.id and u.url = ?";
             }
-                        
-            $sql = "SELECT id,time,user FROM $dbtable";
-            if(count($tquery) > 0){
-                $sql = $sql." WHERE ".join(" AND ",$tquery);
+            else if(array_key_exists('id',$by)){
+                $qdata = [$by['id']];
+                $tquery = "SELECT f.* FROM $dbFromtable f where f.from_id = ?";
             }
-            
-            $stmt = $pdo->prepare($sql);
+            else{
+                $qdata = [];
+                $tquery = "SELECT f.* FROM $dbFromtable f";
+            }
+                                    
+            $stmt = $pdo->prepare($tquery);
             if($stmt->execute($qdata)){
                 while($row = $stmt->fetch()){
-                    $resp[] = [$row['id'],$row['time'],$row['user']];
+                    $resp[] = [$row['id'],$row['from_id'],$row['count']];
                 }
             }
             
         }
         catch(Exception $e){
-            throw new DatabaseException("Error executing function 'getAllUrls'. ".$e->getMessage());
+            throw new DatabaseException("Error executing function 'findByFrom'. ".$e->getMessage());
         }
         return $resp;
     }
@@ -488,24 +486,42 @@ class Persistence{
         $resp = [];
         try{
 
-            $dbtable = $config->getCountTableName();
-            $stmt = $pdo->prepare("SELECT * FROM $dbtable group by id");
+            $dbHitTable = $config->getHitTableName();
+            $dbUrlTable = $config->getUrlTableName();
+            $stmt = $pdo->prepare("SELECT h.id, u.url, h.count FROM $dbHitTable h, $dbUrlTable u WHERE h.id=u.id");
             if($stmt->execute()){
                 while($row = $stmt->fetch()){
-                    $tmp = [];
-                    for($i=0;$i<6;$i++){
-                        $tmp[] = $row[$i];
-                    }
-                    $resp[] = $tmp;
+                    $resp[] = [$row[0],$row[1],$row[2],];
                 }
             }
             
             $stmt = null;
         }
         catch(Exception $e){
-            throw new DatabaseException("Could not update the count.");
+            throw new DatabaseException("Error reading the database. Method getCounts().".$e->getMessage());
         }        
         return $resp;
+    }
+    
+    public static function getHitsWithOptions($pdo, $config){
+        $resp = [];
+        try{
+            
+            $dbOptionsTable = $config->getOptionsTableName();
+            $stmt = $pdo->prepare("SELECT o.id, o.time, o.user FROM $dbOptionsTable o");
+            if($stmt->execute()){
+                while($row = $stmt->fetch()){
+                    $resp[] = ['id'=>$row[0],'time'=>$row[1],'user'=>$row[2],];
+                }
+            }
+            
+            $stmt = null;
+        }
+        catch(Exception $e){
+            throw new DatabaseException("Error reading the database. Method getCounts().".$e->getMessage());
+        }
+        return $resp;
+        
     }
 
     public static function getCountsById($pdo, $config){

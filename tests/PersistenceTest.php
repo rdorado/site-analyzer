@@ -184,7 +184,7 @@ class PersistenceTest extends TestCase
         Persistence::crateDatabase($pdo, $this->configuration);
         Persistence::updateCount($pdo, $this->configuration);
         $resp = Persistence::findUrls($pdo, $this->configuration);        
-        $this->assertEquals(count($resp), 1);
+        $this->assertEquals(count($resp), 2);
         
         $insert_options = ['url' => 'http://test.test'];
         Persistence::updateCount($pdo, $this->configuration, $insert_options);
@@ -200,7 +200,7 @@ class PersistenceTest extends TestCase
         $this->assertEquals(count($resp), 2);
         
         $resp = Persistence::findUrls($pdo, $this->configuration);
-        $this->assertEquals(count($resp), 3);
+        $this->assertEquals(count($resp), 4);
         
     }
     
@@ -285,14 +285,35 @@ class PersistenceTest extends TestCase
         catch(Exception $e) {};
         
         Persistence::crateDatabase($pdo, $this->configuration);
-
+    
         $insert_options = ['url' => 'http://test.test', 'id' => 'No Info'];
         Persistence::updateCount($pdo, $this->configuration, $insert_options);
         Persistence::updateCount($pdo, $this->configuration);
-        $find_options = ['url' => 'http://test.test'];
-        $resp = Persistence::findByFrom($pdo, $this->configuration, $find_options);        
+                
+        $resp = Persistence::findByFrom($pdo, $this->configuration);
         $this->printTable($resp);
-        $this->assertEquals(count($resp), 4);
+        $this->assertEquals(count($resp), 1);
+        
+        $insert_options = ['from_id' => 'http://test.test', 'id' => 'Test'];
+        Persistence::updateCount($pdo, $this->configuration, $insert_options);
+        $resp = Persistence::findByFrom($pdo, $this->configuration);
+        $this->assertEquals(count($resp), 2);
+        
+        $find_options = ['url' => 'http://test.test'];
+        $resp = Persistence::findByFrom($pdo, $this->configuration, $find_options);
+        $this->assertEquals(count($resp), 1);
+        
+        $find_options = ['id' => 'Test'];
+        $resp = Persistence::findByFrom($pdo, $this->configuration, $find_options);
+        $this->assertEquals(count($resp), 1);
+
+        $find_options = [];
+        $resp = Persistence::findByFrom($pdo, $this->configuration);
+        $this->assertEquals(count($resp), 2);
+        
+        $this->printTable($resp);
+        /* */
+        
     }
     
     

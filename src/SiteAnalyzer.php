@@ -7,9 +7,8 @@
  * file that was distributed with this source code.
  */
 
-//namespace SiteAnalyzer;
-include 'Configuration.php';
-include 'Persistence.php';
+include_once 'Configuration.php';
+include_once 'Persistence.php';
 
 /**
  * class SiteAnalyzer
@@ -25,13 +24,32 @@ class SiteAnalyzer{
     /*
      * @param 
      */
-    static function count($options=null)
-    {
-        $config = new Configuration("site-analyzer.ini", isset($pdo));
-        if($pdo==null){
+    static function count($options=[])
+    {	
+        if(array_key_exists('pdo',$options)){
+            $config = new Configuration("site-analyzer.ini",true);              
+            $pdo = $options['pdo'];	
+        }
+        else{            
+            $config = new Configuration("site-analyzer.ini");
             $pdo = Persistence::getPDO($config);
         }
-        return Persistence::updateCount($pdo,$config);        
+        
+        try{
+            return Persistence::updateCount($pdo,$config,$options);
+        }
+        catch(Exception $e) {
+            trigger_error("Could not create a db connection. Trying to create a new model.", E_USER_WARNING);
+            try{
+                Persistence::crateDatabase($pdo, $config);
+                return Persistence::updateCount($pdo,$config,$options);
+            }
+            catch(Exception $e) {
+                throw new DatabaseException("Site Analyzer could connect to the database.".$e->getMessage());
+            };
+            
+        };
+            
     }
 
 
@@ -49,6 +67,60 @@ class SiteAnalyzer{
     } 
 
 
+    
+    
+    /*
+     * @param
+     */
+    public static function groupHitsByTime($criteria, $pdo=null)
+    {
+        $config = new Configuration("site-analyzer.ini", isset($pdo));
+        if($pdo==null){
+            $pdo = Persistence::getPDO($config);
+        }
+        $data = Persistence::getHitsWithOptions($pdo,$config);
+        $resp = [];
+        foreach ($data as $row){
+            $tmp = [$row['id']];
+            $tmp = array_merge($tmp, getdate($row['time']));
+            $resp[] = $tmp;
+        }
+        
+        return $resp;
+        
+    }
+    
+
+    /*
+     * @param
+     */
+    public static function groupHitsByUser($pdo=null)
+    {
+        $config = new Configuration("site-analyzer.ini", isset($pdo));
+        if($pdo==null){
+            $pdo = Persistence::getPDO($config);
+        }
+        $data = Persistence::getHitsWithOptions($pdo,$config);
+        
+        $count = [];
+        foreach ($data as $row){
+            if(array_key_exists($row['user'],$count)){
+                $count[$row['user']]++;
+            }
+            else{
+                $count[$row['user']]=1;
+            }            
+        }
+        
+        $resp = [];
+        foreach ($count as $user => $count){
+            $resp[] = [$user, $count];
+        }
+        return $resp;
+        
+    }
+    
+    
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
@@ -56,7 +128,6 @@ class SiteAnalyzer{
     {
         if($format=="html"){
             $resp = "<table style='border-collapse: collapse;border: 1px solid black;'>";
-            $resp .="<tr><th style='border: 1px solid black;'>id</th><th style='border: 1px solid black;'>url</th><th style='border: 1px solid black;'>from_id</th><th style='border: 1px solid black;'>time</th><th style='border: 1px solid black;'>user</th><th style='border: 1px solid black;'>count</th></tr>";
             foreach($data as $row){
                 $resp.="<tr style='border: 1px solid black;'>";
                 foreach($row as $cell){
@@ -70,6 +141,8 @@ class SiteAnalyzer{
     } 
 
 
+    
+
     /*
      * @param
      */
@@ -79,19 +152,6 @@ class SiteAnalyzer{
     } 
 
 
-    /**********************************************************
-         Helper methods
-     **********************************************************/
-
-    /*
-     * @param
-     */
-    private static function loadconfig()
-    {
-        //if (!$config = parse_ini_file('itemcounter.ini', TRUE)) throw new exception('Unable to open configuration file "itemcounter.ini".'); 
-          
-        return $config;
-    }
 
 
 
