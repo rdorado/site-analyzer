@@ -5,6 +5,7 @@
     "keywords": ["hit counter","test","AB test","site statistics"],
     "homepage": "https://github.com/rdorado/itemcounter-php",
     "license": "MIT",
+    "version": "0.0.1",	
     "authors": [
         {
             "name": "Ruben Dorado",
