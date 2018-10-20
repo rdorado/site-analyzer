@@ -1,7 +1,7 @@
 {
     "name": "rdorado/site-analyzer",
     "type": "library",
-    "description": "Analyze of a php-based website with minimum configuration. Features include: hit counter, user analysis, ab tests, and user profiling.",
+    "description": "Analyze a php-based website with minimum configuration. Features include: hit counter, user analysis, ab tests, and user profiling.",
     "keywords": ["hit counter","test","AB test","site statistics"],
     "homepage": "https://github.com/rdorado/itemcounter-php",
     "license": "MIT",
