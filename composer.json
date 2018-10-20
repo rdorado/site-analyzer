@@ -19,12 +19,12 @@
     },
     "autoload": {
 		"psr-4": {
-	    	"SiteAnalyzer\\": "src"	
+	    	"SiteAnalyzer\\": "src/"	
 		} 
     },
     "autoload-dev": {
         "psr-4":{
-	    	"SiteAnalyzer\\Tests\\": "tests"
+	    	"SiteAnalyzer\\Tests\\": "tests/"
 		}
     }
 }
