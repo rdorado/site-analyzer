@@ -10,6 +10,8 @@
 namespace SiteAnalyzer;
 use Exception;
 
+//include_once 'exceptions.php';
+
 /**
  * class SiteAnalyzer
  *

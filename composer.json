@@ -19,7 +19,8 @@
     },
     "autoload": {
 		"psr-4": {
-	    	"SiteAnalyzer\\": "src/"	
+	    	"SiteAnalyzer\\": "src/",
+	    	"HelloWorld\\": "src/HelloWorld/"
 		} 
     },
     "autoload-dev": {
