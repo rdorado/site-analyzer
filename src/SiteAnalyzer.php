@@ -22,6 +22,11 @@ use Exception;
  */
 class SiteAnalyzer{
 
+    static function hello()
+    {
+        print("hello");
+        
+    }
 
     /*
      * @param 
