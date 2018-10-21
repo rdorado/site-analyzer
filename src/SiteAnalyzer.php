@@ -8,10 +8,10 @@
  */
 namespace SiteAnalyzer;
 
-include_once 'Configuration.php';
-include_once 'Persistence.php';
+use Exception;
 
-
+//include_once 'Configuration.php';
+//include_once 'Persistence.php';
 /**
  * class SiteAnalyzer
  *

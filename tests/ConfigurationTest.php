@@ -1,5 +1,6 @@
 <?php
-include 'src/Configuration.php';
+
+namespace SiteAnalyzer;
 
 use PHPUnit\Framework\TestCase;
 

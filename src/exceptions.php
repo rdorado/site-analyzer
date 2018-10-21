@@ -7,7 +7,9 @@
  * file that was distributed with this source code.
  */
 
-//namespace SiteAnalyzer;
+namespace SiteAnalyzer;
+
+use Exception;
 
 
 /**

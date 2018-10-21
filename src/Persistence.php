@@ -6,7 +6,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-include_once 'exceptions.php';
+namespace SiteAnalyzer;
+
+use Exception;
+use PDO;
+
+//include_once 'exceptions.php';
+
 
 /**
  * class SiteAnalyzer
