@@ -8,6 +8,7 @@
  */
 
 namespace SiteAnalyzer;
+
 use Exception;
 
 /**
@@ -186,7 +187,7 @@ final class Configuration
             return $configFile[$section][$varname];
         }
         catch(Exception $e){
-            throw new ConfigurationException( "Error loading config file. Variable $varname in section [$section] not found. Check the configuration file.");
+            throw new SiteAnalyzerException( "Error loading config file. Variable $varname in section [$section] not found. Check the configuration file.");
         }
     }
 

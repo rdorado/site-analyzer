@@ -37,7 +37,7 @@ class Persistence{
             return new PDO($config->getDsn(),$config->getUser(),$config->getPassword(),$options);
          }
          catch(Exception $e){
-            throw new PersistenceException("Could not create a db connection.");
+            throw new SiteAnalyzerException("Could not create a db connection.");
          }
     }
 
@@ -65,7 +65,7 @@ class Persistence{
             $stmt->execute();
         }
         catch(Exception $e){
-            throw new DatabaseException("Could not create the database. ".$e->getMessage());
+            throw new SiteAnalyzerException("Could not create the database. ".$e->getMessage());
         }        
         return true;
 
@@ -107,7 +107,7 @@ class Persistence{
            
         }
         catch(Exception $e){
-            throw new DatabaseException("Problem deleting the table $tableName. ".$e->getMessage());
+            throw new SiteAnalyzerException("Problem deleting the table $tableName. ".$e->getMessage());
         }
         return true;
     }
@@ -296,7 +296,6 @@ class Persistence{
             $stmt = null;
         }
         catch(Exception $e){
-            throw new DatabaseException("Could not update the count.".$e->getMessage());
         }        
     }
 
@@ -318,7 +317,7 @@ class Persistence{
             }
         }
         catch(Exception $e){
-            throw new DatabaseException("Error executing function 'findHitsByUrl'. ".$e->getMessage());
+            throw new SiteAnalyzerException("Error executing function 'findHitsByUrl'. ".$e->getMessage());
         }
         return $resp;
         
@@ -344,7 +343,7 @@ class Persistence{
             
         }
         catch(Exception $e){
-            throw new DatabaseException("Error executing function 'getAllHits'. ".$e->getMessage());
+            throw new SiteAnalyzerException("Error executing function 'getAllHits'. ".$e->getMessage());
         }
         return $resp;        
     }
@@ -385,7 +384,7 @@ class Persistence{
             
         }
         catch(Exception $e){
-            throw new DatabaseException("Error executing function 'getAllUrls'. ".$e->getMessage());
+            throw new SiteAnalyzerException("Error executing function 'getAllUrls'. ".$e->getMessage());
         }
         return $resp;
     }
@@ -430,7 +429,7 @@ class Persistence{
             
         }
         catch(Exception $e){
-            throw new DatabaseException("Error executing function 'getAllUrls'. ".$e->getMessage());
+            throw new SiteAnalyzerException("Error executing function 'getAllUrls'. ".$e->getMessage());
         }
         return $resp;
     }
@@ -475,7 +474,7 @@ class Persistence{
             
         }
         catch(Exception $e){
-            throw new DatabaseException("Error executing function 'findByFrom'. ".$e->getMessage());
+            throw new SiteAnalyzerException("Error executing function 'findByFrom'. ".$e->getMessage());
         }
         return $resp;
     }
@@ -504,7 +503,7 @@ class Persistence{
             $stmt = null;
         }
         catch(Exception $e){
-            throw new DatabaseException("Error reading the database. Method getCounts().".$e->getMessage());
+            throw new SiteAnalyzerException("Error reading the database. Method getCounts().".$e->getMessage());
         }        
         return $resp;
     }
@@ -524,7 +523,7 @@ class Persistence{
             $stmt = null;
         }
         catch(Exception $e){
-            throw new DatabaseException("Error reading the database. Method getCounts().".$e->getMessage());
+            throw new SiteAnalyzerException("Error reading the database. Method getCounts().".$e->getMessage());
         }
         return $resp;
         
