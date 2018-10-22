@@ -1,4 +1,6 @@
 <?php 
+require_once __DIR__ . '/vendor/autoload.php';
+
 
 //include_once 'SiteAnalyzer.php';
 use SiteAnalyzer\SiteAnalyzer;
