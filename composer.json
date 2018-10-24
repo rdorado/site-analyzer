@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Analyze a php-based website with minimum configuration. Features include: hit counter, user analysis, ab tests, and user profiling.",
     "keywords": ["hit counter","test","AB test","site statistics"],
-    "homepage": "https://github.com/rdorado/itemcounter-php",
+    "homepage": "https://github.com/rdorado/site-analyzer",
     "license": "MIT",
     "version": "0.0.1",	
     "authors": [
@@ -19,8 +19,7 @@
     },
     "autoload": {
 		"psr-4": {
-	    	"SiteAnalyzer\\": "src/",
-	    	"HelloWorld\\": "src/HelloWorld/"
+	    	"SiteAnalyzer\\": "src/"
 		} 
     },
     "autoload-dev": {
