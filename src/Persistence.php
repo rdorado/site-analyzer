@@ -37,7 +37,7 @@ class Persistence{
             return new PDO($config->getDsn(),$config->getUser(),$config->getPassword(),$options);
          }
          catch(Exception $e){
-            throw new SiteAnalyzerException("Could not create a db connection.");
+            throw new Exception("Could not create a db connection. ".$e->getMessage());
          }
     }
 
@@ -65,7 +65,7 @@ class Persistence{
             $stmt->execute();
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Could not create the database. ".$e->getMessage());
+            throw new Exception("Could not create the database. ".$e->getMessage());
         }        
         return true;
 
@@ -107,7 +107,7 @@ class Persistence{
            
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Problem deleting the table $tableName. ".$e->getMessage());
+            throw new Exception("Problem deleting the table $tableName. ".$e->getMessage());
         }
         return true;
     }
@@ -199,7 +199,8 @@ class Persistence{
         }
         return true;        
     }
-        
+     
+    
     /*
      * @param $pdo PDO
      * @param $config Configuration
@@ -207,96 +208,93 @@ class Persistence{
      */
     public static function updateCount($pdo, $config, $options=[]){
 
-        try{
+        $db_hit_table = $config->getHitTableName();
+        $db_options_table = $config->getOptionsTableName();
+        $db_from_table = $config->getFromTableName();
+        $db_url_table = $config->getUrlTableName();
+
+        $store_from = true;
+        $store_time = true;
+        $store_user = true;
         
-            $db_hit_table = $config->getHitTableName();
-            $db_options_table = $config->getOptionsTableName();
-            $db_from_table = $config->getFromTableName();
-            $db_url_table = $config->getUrlTableName();
-
-            $store_from = true;
-            $store_time = true;
-            $store_user = true;
-            
-            if(array_key_exists('url', $options)){
-                $url = $options['url'];
-            }
-            else if(array_key_exists('HTTP_HOST',$_SERVER)){
-                $url = "http://".$_SERVER['HTTP_HOST'];
-                if(array_key_exists('REQUEST_URI',$_SERVER)){
-                    $url=$url.$_SERVER['REQUEST_URI'];
-                }               
-            }
-            else{
-                $url = "No Info";
-            }
-
-            if($config->getRemoveQueryString()){
-                $url = preg_replace('/\?.*/', '', $url);
-            }
-            
-            if(array_key_exists('id', $options)){
-                $id = $options['id'];
-            }
-            else{
-                $id = $url;
-            }
-
-            $stmt = $pdo->prepare("UPDATE $db_hit_table SET count = count + 1 WHERE id = ?");
-            $stmt->execute([$id]);
-            if( $stmt->rowCount() == 0 ){
-                $stmt = $pdo->prepare("INSERT INTO $db_hit_table (id, count) VALUES (?, 1)");
-                $stmt->execute([$id]);
-            }
-
-            $stmt = $pdo->prepare("UPDATE $db_url_table SET count = count + 1 WHERE id = ? and url = ?");
-            $stmt->execute([$id, $url]);
-            if( $stmt->rowCount() == 0 ){
-                $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
-                $stmt->execute([$id, $url]);
-            }
-            
-            
-            if($store_from){
-                            
-                if(array_key_exists('from_id', $options)){
-                    $ids = [$options['from_id']];
-                }
-                else{
-                    $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'No referer info';
-                    $ids = Persistence::findHitIdsByUrl($pdo,$config,$from_url); 
-                    if(count($ids)==0){
-                        $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
-                        $stmt->execute([$from_url, $from_url]);
-                        $ids = [$from_url];
-                    }
-                }
-                foreach ($ids as $from_id) {
-                    $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
-                    $stmt->execute([$id, $from_id]);
-                    if( $stmt->rowCount() == 0 ){
-                        $stmt = $pdo->prepare("INSERT INTO $db_from_table (id, from_id, count) VALUES (?, ?, 1)");
-                        $stmt->execute([$id, $from_id]);
-                    }
-                }
-            }
-                        
-            $user = null;
-            if($store_user){
-                if(array_key_exists('user', $options)){
-                    $user = $options['user'];
-                }    
-            }
-            
-            if($store_time || $store_user){
-                $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
-                $stmt->execute([$id, time(), $user]);
-            }
-                        
-            $stmt = null;
+        if(array_key_exists('url', $options)){
+            $url = $options['url'];
         }
-        catch(Exception $e){
-        }        
+        else if(array_key_exists('HTTP_HOST',$_SERVER)){
+            $url = "http://".$_SERVER['HTTP_HOST'];
+            if(array_key_exists('REQUEST_URI',$_SERVER)){
+                $url=$url.$_SERVER['REQUEST_URI'];
+            }               
+        }
+        else{
+            $url = "No Info";
+        }
+
+        if($config->getRemoveQueryString()){
+            $url = preg_replace('/\?.*/', '', $url);
+        }
+        
+        if(array_key_exists('id', $options)){
+            $id = $options['id'];
+        }
+        else{
+            $id = $url;
+        }
+
+        $stmt = $pdo->prepare("UPDATE $db_hit_table SET count = count + 1 WHERE id = ?");
+        $stmt->execute([$id]);
+        if( $stmt->rowCount() == 0 ){
+            $stmt = $pdo->prepare("INSERT INTO $db_hit_table (id, count) VALUES (?, 1)");
+            $stmt->execute([$id]);
+        }
+
+        $stmt = $pdo->prepare("UPDATE $db_url_table SET count = count + 1 WHERE id = ? and url = ?");
+        $stmt->execute([$id, $url]);
+        if( $stmt->rowCount() == 0 ){
+            $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
+            $stmt->execute([$id, $url]);
+        }
+        
+        
+        if($store_from){
+                        
+            if(array_key_exists('from_id', $options)){
+                $ids = [$options['from_id']];
+            }
+            else{
+                $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'No referer info';
+                $ids = Persistence::findHitIdsByUrl($pdo,$config,$from_url); 
+                if(count($ids)==0){
+                    $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
+                    $stmt->execute([$from_url, $from_url]);
+                    $ids = [$from_url];
+                }
+            }
+            foreach ($ids as $from_id) {
+                $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
+                $stmt->execute([$id, $from_id]);
+                if( $stmt->rowCount() == 0 ){
+                    $stmt = $pdo->prepare("INSERT INTO $db_from_table (id, from_id, count) VALUES (?, ?, 1)");
+                    $stmt->execute([$id, $from_id]);
+                }
+            }
+        }
+                    
+        $user = null;
+        if($store_user){
+            if(array_key_exists('user', $options)){
+                $user = $options['user'];
+            }    
+        }
+        
+        if($store_time || $store_user){
+            $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
+            $stmt->execute([$id, time(), $user]);
+        }
+                    
+        $stmt = null;
+        
+        return true;
     }
 
     /*
@@ -317,7 +315,7 @@ class Persistence{
             }
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Error executing function 'findHitsByUrl'. ".$e->getMessage());
+            throw new Exception("Error executing function 'findHitsByUrl'. ".$e->getMessage());
         }
         return $resp;
         
@@ -343,7 +341,7 @@ class Persistence{
             
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Error executing function 'getAllHits'. ".$e->getMessage());
+            throw new Exception("Error executing function 'getAllHits'. ".$e->getMessage());
         }
         return $resp;        
     }
@@ -384,7 +382,7 @@ class Persistence{
             
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Error executing function 'getAllUrls'. ".$e->getMessage());
+            throw new Exception("Error executing function 'getAllUrls'. ".$e->getMessage());
         }
         return $resp;
     }
@@ -429,7 +427,7 @@ class Persistence{
             
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Error executing function 'getAllUrls'. ".$e->getMessage());
+            throw new Exception("Error executing function 'getAllUrls'. ".$e->getMessage());
         }
         return $resp;
     }
@@ -474,7 +472,7 @@ class Persistence{
             
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Error executing function 'findByFrom'. ".$e->getMessage());
+            throw new Exception("Error executing function 'findByFrom'. ".$e->getMessage());
         }
         return $resp;
     }
@@ -503,7 +501,7 @@ class Persistence{
             $stmt = null;
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Error reading the database. Method getCounts().".$e->getMessage());
+            throw new Exception("Error reading the database. Method getCounts().".$e->getMessage());
         }        
         return $resp;
     }
@@ -523,7 +521,7 @@ class Persistence{
             $stmt = null;
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException("Error reading the database. Method getCounts().".$e->getMessage());
+            throw new Exception("Error reading the database. Method getCounts().".$e->getMessage());
         }
         return $resp;
         

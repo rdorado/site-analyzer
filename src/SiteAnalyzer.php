@@ -52,7 +52,7 @@ class SiteAnalyzer{
                 return Persistence::updateCount($pdo,$config,$options);
             }
             catch(Exception $e) {
-                throw new SiteAnalyzerException("Site Analyzer could connect to the database.".$e->getMessage());
+                throw new Exception("Site Analyzer could connect to the database.".$e->getMessage());
             };
             
         };
@@ -148,8 +148,6 @@ class SiteAnalyzer{
     } 
 
 
-    
-
     /*
      * @param
      */
@@ -157,10 +155,6 @@ class SiteAnalyzer{
     {
 
     } 
-
-
-
-
 
 }
 
