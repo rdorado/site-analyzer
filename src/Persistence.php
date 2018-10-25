@@ -393,7 +393,7 @@ class Persistence{
      *
      */
     public static function findIdByTimeUser($pdo, $config, $by=[]){
-        $resp = [];
+        $resp = [ ];
         try{
             $dbtable = $config->getOptionsTableName();
             $qdata = [];
@@ -505,7 +505,13 @@ class Persistence{
         }        
         return $resp;
     }
+
     
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
     public static function getHitsWithOptions($pdo, $config){
         $resp = [];
         try{
@@ -526,7 +532,12 @@ class Persistence{
         return $resp;
         
     }
-
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */    
     public static function getCountsById($pdo, $config){
         return "Works";
     }
