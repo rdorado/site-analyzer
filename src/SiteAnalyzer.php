@@ -22,11 +22,6 @@ use Exception;
  */
 class SiteAnalyzer{
 
-    static function hello()
-    {
-        print("hello");
-        
-    }
 
     /*
      * @param 
@@ -147,6 +142,15 @@ class SiteAnalyzer{
         return $data; 
     } 
 
+
+    /*
+     * @param
+     */
+    public static function getRelationLinks()
+    {
+
+    } 
+ 
 
     /*
      * @param
