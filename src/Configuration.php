@@ -109,7 +109,6 @@ final class Configuration
      */
     public function getHitTableName()
     {
-        
         return $this->hitTableName;
     }
 
@@ -187,7 +186,7 @@ final class Configuration
             return $configFile[$section][$varname];
         }
         catch(Exception $e){
-            throw new SiteAnalyzerException( "Error loading config file. Variable $varname in section [$section] not found. Check the configuration file.");
+            throw new Exception( "Error loading config file. Variable $varname in section [$section] not found. Check the configuration file.");
         }
     }
 
@@ -198,6 +197,7 @@ final class Configuration
     public static function loadConfig($configFileName)
     {
         $config = new Configuration($configFileName);
+        return $config;
     }
 
 

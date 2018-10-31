@@ -167,6 +167,7 @@ class Persistence{
         return true;
     }
     
+   
     
     /*
      * @param $pdo PDO
@@ -530,7 +531,6 @@ class Persistence{
             throw new Exception("Error reading the database. Method getCounts().".$e->getMessage());
         }
         return $resp;
-        
     }
     
     /*

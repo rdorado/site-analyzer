@@ -10,8 +10,6 @@ namespace SiteAnalyzer;
 
 use Exception;
 
-//include_once 'Configuration.php';
-//include_once 'Persistence.php';
 /**
  * class SiteAnalyzer
  *
@@ -22,18 +20,19 @@ use Exception;
  */
 class SiteAnalyzer{
 
-
+    
+    
     /*
      * @param 
      */
     static function count($options=[])
     {	
-        if(array_key_exists('pdo',$options)){
-            $config = new Configuration("site-analyzer.ini",true);              
+        $config = loadConfig( array_key_exists('pdo',$options) );
+        
+        if(array_key_exists('pdo',$options)){            
             $pdo = $options['pdo'];	
         }
         else{            
-            $config = new Configuration("site-analyzer.ini");
             $pdo = Persistence::getPDO($config);
         }
         
@@ -54,6 +53,27 @@ class SiteAnalyzer{
             
     }
 
+    
+    /*
+     * @param $format string, one of [php-array, xml, json, txt-csv]
+     */
+    public static function loadConfig($pdoProvided=FALSE)
+    {
+        $config = NULL;
+        try{
+            $config = new Configuration("../../../../site-analyzer.ini",$pdoProvided);
+        }
+        catch(Exception $e){
+            try{
+                $config = new Configuration("site-analyzer.ini",$pdoProvided); 
+            }
+            catch(Exception $e){
+                throw Exception("Config file not found.");
+            }
+        }
+        
+        return $config;
+    }
 
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
