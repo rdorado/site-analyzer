@@ -34,11 +34,21 @@ class Persistence{
             $options = array(
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             );
-            return new PDO($config->getDsn(),$config->getUser(),$config->getPassword(),$options);
+            
+            if($config->useOnMemoryDB()){
+                return new PDO("sqlite::memory:");
+            }
+            
+            if($config->getDsn()){
+                return new PDO($config->getDsn(),$config->getUser(),$config->getPassword(),$options);
+            }
+            
          }
          catch(Exception $e){
             throw new Exception("Could not create a db connection. ".$e->getMessage());
          }
+        
+        
     }
 
 
