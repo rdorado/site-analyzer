@@ -54,6 +54,7 @@ class Persistence{
             }
         }
         throw new Exception("Error when trying to obtain a connection to a database. Check the configuration. ");
+
     }
 
 
