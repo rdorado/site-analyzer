@@ -28,7 +28,6 @@ class PersistenceTest extends TestCase
             Persistence::deleteDatabase($pdo, $this->configuration);
         }
         catch(Exception $e){
-            
         }
     }
     
@@ -38,10 +37,8 @@ class PersistenceTest extends TestCase
      */
     public function testGetPDO()
     {
-        print("-->"+$this->configuration->getDsn());
-        //$pdo = Persistence::getPDO($this->configuration);
-
-        //$this->assertNotNull($pdo);
+        $pdo = Persistence::getPDO($this->configuration);
+        $this->assertNotNull($pdo);
     }
 
     /**
@@ -255,7 +252,6 @@ class PersistenceTest extends TestCase
         $resp = Persistence::findIdByTimeUser($pdo, $this->configuration);
         $this->assertEquals(count($resp), 10);        
         
-        print("t1: $time1, ts: $time2");
         $find_options = ['from' => $time1, 'user' => 1];
         $resp = Persistence::findIdByTimeUser($pdo, $this->configuration, $find_options);
         //$this->assertEquals(count($resp), 4);
