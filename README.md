@@ -11,7 +11,7 @@ Site Dynamics Analyzer is php-based tool to analyse the dynamics of a web site.
 Features
 --------
 
-- Page counter/analyzis
+- Page counter/analysis
 - Report of pages per User 
 - PSR-4 compatible.
 
@@ -66,7 +66,8 @@ Once you have started to count the page hits, different sort of reports can be d
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 ``` 
-<---
+
+<!---
 ## Other features:
 
 ### Example 2: time analysis
