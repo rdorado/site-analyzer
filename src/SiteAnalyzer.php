@@ -39,7 +39,6 @@ class SiteAnalyzer{
             return Persistence::updateCount($pdo,$config,$options);
         }
         catch(Exception $e) {
-            trigger_error("Could not create a db connection. Trying to create a new model.", E_USER_WARNING);
             try{
                 Persistence::crateDatabase($pdo, $config);
                 return Persistence::updateCount($pdo,$config,$options);
