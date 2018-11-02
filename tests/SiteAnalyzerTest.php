@@ -1,7 +1,9 @@
 <?php
-include '..\SiteAnalyzer.php';
+namespace SiteAnalyzer;
 
-final class SiteAnalyzerTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+final class SiteAnalyzerTest extends TestCase
 {
 
     public function testMakeDatabase()

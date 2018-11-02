@@ -166,7 +166,6 @@ final class Configuration
      */
     public function __construct($configFileName, $pdoProvided=FALSE)
     {    
-        print(getcwd());
         $config = parse_ini_file($configFileName, TRUE); 
         if(!$pdoProvided){
             $this->dsn = $this->loadMandatoryVariable($config,"database","dsn");

@@ -21,13 +21,12 @@ use Exception;
 class SiteAnalyzer{
 
     
-    
     /*
      * @param 
      */
     static function count($options=[])
     {	
-        $config = loadConfig( array_key_exists('pdo',$options) );
+        $config = SiteAnalyzer::loadConfig( array_key_exists('pdo',$options) );
         
         if(array_key_exists('pdo',$options)){            
             $pdo = $options['pdo'];	
