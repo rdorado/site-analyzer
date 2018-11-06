@@ -50,6 +50,7 @@ use SiteAnalyzer\SiteAnalyzer;
 SiteAnalyzer::count();
 ```
 
+
 You can also include other options to be stored on the database. That depends on the kind of reportings or analyzis you want to perform:
 
 ```php
