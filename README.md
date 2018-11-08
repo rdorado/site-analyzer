@@ -3,7 +3,8 @@ Site Analyzer
  
 [![MIT License](https://img.shields.io/packagist/l/cocur/slugify.svg)](http://opensource.org/licenses/MIT)
 [![Latest Release](https://img.shields.io/packagist/v/cocur/slugify.svg)](https://packagist.org/packages/rdorado/site-analyzer)
-<!--[![Scrutinizer Quality Score](https://img.shields.io/scrutinizer/g/cocur/slugify.svg?style=flat)](https://scrutinizer-ci.com/g/cocur/slugify/)
+
+<!--[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/rdorado/site-dynamics-analyzer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rdorado/site-dynamics-analyzer/badges/quality-score.png?b=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/cocur/slugify/badges/coverage.png?b=master&style=flat-square)](https://scrutinizer-ci.com/g/cocur/slugify/?branch=master)
 -->
 
