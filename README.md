@@ -3,8 +3,9 @@ Site Analyzer
  
 [![MIT License](https://img.shields.io/packagist/l/cocur/slugify.svg)](http://opensource.org/licenses/MIT)
 [![Latest Release](https://img.shields.io/packagist/v/cocur/slugify.svg)](https://packagist.org/packages/rdorado/site-analyzer)
-[![Scrutinizer Quality Score](https://img.shields.io/scrutinizer/g/cocur/slugify.svg?style=flat)](https://scrutinizer-ci.com/g/cocur/slugify/)
+<!--[![Scrutinizer Quality Score](https://img.shields.io/scrutinizer/g/cocur/slugify.svg?style=flat)](https://scrutinizer-ci.com/g/cocur/slugify/)
 [![Code Coverage](https://scrutinizer-ci.com/g/cocur/slugify/badges/coverage.png?b=master&style=flat-square)](https://scrutinizer-ci.com/g/cocur/slugify/?branch=master)
+-->
 
 SiteAnalyzer is a package created to perform analysis of sites developed in PHP. SiteAnalyzer can be installed into any PHP site that fits the requirements in minutes. SiteAnalyzer makes use of machine learning algorithms and statistics to create powerful reports and analysis. 
 
