@@ -46,7 +46,7 @@ class Persistence
         if ($config->getUseOnMemoryDB()) {
             try {
                 return new PDO("sqlite::memory:",$options);
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 throw new Exception("Could not create a db connection. Check permissions, configuration, and documentation. ".$e->getMessage());                
             }
         }
@@ -193,11 +193,11 @@ class Persistence
      * @param $config Configuration
      */
     public static function checkHitTable($pdo, $config) {
-        try{
+        try {
             $db_hit_table = $config->getHitTableName();
             $stmt = $pdo->prepare("SELECT * FROM $db_hit_table WHERE 1==0");
             $stmt->execute();            
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
         return true;        
@@ -209,7 +209,7 @@ class Persistence
      * @param $config Configuration
      *
      */
-    public static function updateCount($pdo, $config, $options  =[]) {
+    public static function updateCount($pdo, $config, $options  = []) {
 
         $db_hit_table = $config->getHitTableName();
         $db_options_table = $config->getOptionsTableName();
@@ -222,10 +222,10 @@ class Persistence
         
         if (array_key_exists('url', $options)) {
             $url = $options['url'];
-        } else if (array_key_exists('HTTP_HOST',$_SERVER)) {
+        } else if (array_key_exists('HTTP_HOST', $_SERVER)) {
             $url = "http://".$_SERVER['HTTP_HOST'];
-            if (array_key_exists('REQUEST_URI',$_SERVER)) {
-                $url=$url.$_SERVER['REQUEST_URI'];
+            if (array_key_exists('REQUEST_URI', $_SERVER)) {
+                $url = $url.$_SERVER['REQUEST_URI'];
             }               
         } else {
             $url = "No Info";
@@ -243,14 +243,14 @@ class Persistence
 
         $stmt = $pdo->prepare("UPDATE $db_hit_table SET count = count + 1 WHERE id = ?");
         $stmt->execute([$id]);
-        if ($stmt->rowCount() == 0) {
+        if ($stmt->rowCount()==0) {
             $stmt = $pdo->prepare("INSERT INTO $db_hit_table (id, count) VALUES (?, 1)");
             $stmt->execute([$id]);
         }
 
         $stmt = $pdo->prepare("UPDATE $db_url_table SET count = count + 1 WHERE id = ? and url = ?");
         $stmt->execute([$id, $url]);
-        if ($stmt->rowCount() == 0) {
+        if ($stmt->rowCount()==0) {
             $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
             $stmt->execute([$id, $url]);
         }
@@ -286,7 +286,7 @@ class Persistence
             }    
         }
         
-        if ($store_time||$store_user) {
+        if ($store_time || $store_user) {
             $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
             $stmt->execute([$id, time(), $user]);
         }
@@ -305,8 +305,8 @@ class Persistence
             
             $dbtable = $config->getUrlTableName();
             $stmt = $pdo->prepare("SELECT id,url,count FROM $dbtable WHERE url = '$url'");
-            if($stmt->execute()){
-                while($row = $stmt->fetch()){
+            if ($stmt->execute()) {
+                while ($row = $stmt->fetch()) {
                     $resp[] = $row['id'];
                 }
             }
@@ -329,7 +329,7 @@ class Persistence
             $stmt = $pdo->prepare("SELECT id,count FROM $dbtable");
             if ($stmt->execute()) {
                 while ($row = $stmt->fetch()) {
-                    $resp[] = [$row['id'],$row['count']];
+                    $resp[] = [$row['id'], $row['count']];
                 }
             }
             
@@ -363,7 +363,7 @@ class Persistence
             
             $sql = "SELECT id,url,count FROM $dbtable";
             if (count($tquery) > 0) {
-                $sql = $sql." WHERE ".join(" AND ",$tquery);
+                $sql = $sql." WHERE ".join(" AND ", $tquery);
             }
             
             $stmt = $pdo->prepare($sql);
@@ -384,9 +384,9 @@ class Persistence
      * @param $config Configuration
      *
      */
-    public static function findIdByTimeUser($pdo, $config, $by = []){
+    public static function findIdByTimeUser($pdo, $config, $by = []) {
         $resp = [];
-        try{
+        try {
             $dbtable = $config->getOptionsTableName();
             $qdata = [];
             $tquery = [];
@@ -443,7 +443,7 @@ class Persistence
             } else if (array_key_exists('url', $by)) {
                 $qdata = [$by['url']];
                 $tquery = "SELECT f.* FROM $dbFromtable f,$dbUrltable u where f.from_id = u.id and u.url = ?";
-            } else if (array_key_exists('id',$by)) {
+            } else if (array_key_exists('id', $by)) {
                 $qdata = [$by['id']];
                 $tquery = "SELECT f.* FROM $dbFromtable f where f.from_id = ?";
             } else {
@@ -454,7 +454,7 @@ class Persistence
             $stmt = $pdo->prepare($tquery);
             if ($stmt->execute($qdata)) {
                 while ($row = $stmt->fetch()) {
-                    $resp[] = [$row['id'],$row['from_id'],$row['count']];
+                    $resp[] = [$row['id'], $row['from_id'], $row['count']];
                 }
             }
             
@@ -481,7 +481,7 @@ class Persistence
             $stmt = $pdo->prepare("SELECT h.id, u.url, h.count FROM $dbHitTable h, $dbUrlTable u WHERE h.id=u.id");
             if ($stmt->execute()) {
                 while ($row = $stmt->fetch()) {
-                    $resp[] = [$row[0], $row[1], $row[2],];
+                    $resp[] = [$row[0], $row[1], $row[2]];
                 }
             }
             
@@ -505,7 +505,7 @@ class Persistence
             $stmt = $pdo->prepare("SELECT o.id, o.time, o.user FROM $dbOptionsTable o");
             if ($stmt->execute()) {
                 while ($row = $stmt->fetch()) {
-                    $resp[] = ['id'=>$row[0], 'time'=>$row[1], 'user'=>$row[2],];
+                    $resp[] = ['id'=>$row[0], 'time'=>$row[1], 'user'=>$row[2]];
                 }
             }
             
