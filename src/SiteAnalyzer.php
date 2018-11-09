@@ -118,8 +118,7 @@ class SiteAnalyzer
         foreach ($data as $row) {
             if (array_key_exists($row['user'], $count)) {
                 $count[$row['user']]++;
-            }
-            else {
+            } else {
                 $count[$row['user']] = 1;
             }            
         }
