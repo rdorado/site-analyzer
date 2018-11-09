@@ -11,7 +11,6 @@ namespace SiteAnalyzer;
 use Exception;
 use PDO;
 
-
 /**
  * class SiteAnalyzer
  *
