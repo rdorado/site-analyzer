@@ -45,7 +45,7 @@ class Persistence
         
         if ($config->getUseOnMemoryDB()) {
             try {
-                return new PDO("sqlite::memory:",$options);
+                return new PDO("sqlite::memory:", $options);
             } catch (Exception $e) {
                 throw new Exception("Could not create a db connection. Check permissions, configuration, and documentation. ".$e->getMessage());                
             }
@@ -209,7 +209,7 @@ class Persistence
      * @param $config Configuration
      *
      */
-    public static function updateCount($pdo, $config, $options  = []) {
+    public static function updateCount($pdo, $config, $options = []) {
 
         $db_hit_table = $config->getHitTableName();
         $db_options_table = $config->getOptionsTableName();
@@ -407,7 +407,7 @@ class Persistence
             
             $sql = "SELECT id,time,user FROM $dbtable";
             if (count($tquery) > 0) {
-                $sql = $sql." WHERE ".join(" AND ",$tquery);
+                $sql = $sql." WHERE ".join(" AND ", $tquery);
             }
             
             $stmt = $pdo->prepare($sql);
