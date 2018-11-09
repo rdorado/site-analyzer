@@ -164,18 +164,18 @@ final class Configuration
     /*
      * @param configFileName
      */
-    public function __construct($configFileName, $pdoProvided=FALSE)
+    public function __construct($configFileName, $pdoProvided = FALSE)
     {    
         $config = parse_ini_file($configFileName, TRUE); 
-        if(!$pdoProvided){
-            $this->dsn = $this->loadMandatoryVariable($config,"database","dsn");
+        if (!$pdoProvided) {
+            $this->dsn = $this->loadMandatoryVariable($config, "database", "dsn");
         }
         
-        $this->hitTableName = $this->loadMandatoryVariable($config,"database","db_hit_table");
-        $this->fromTableName = $this->loadMandatoryVariable($config,"database","db_from_table");        
-        $this->optionsTableName = $this->loadMandatoryVariable($config,"database","db_options_table");
-        $this->urlTableName = $this->loadMandatoryVariable($config,"database","db_url_table");
-        $this->useOnMemoryDB = $this->loadMandatoryVariable($config,"database","use_onmemorydb");
+        $this->hitTableName = $this->loadMandatoryVariable($config, "database", "db_hit_table");
+        $this->fromTableName = $this->loadMandatoryVariable($config, "database", "db_from_table");        
+        $this->optionsTableName = $this->loadMandatoryVariable($config, "database", "db_options_table");
+        $this->urlTableName = $this->loadMandatoryVariable($config, "database", "db_url_table");
+        $this->useOnMemoryDB = $this->loadMandatoryVariable($config, "database", "use_onmemorydb");
         
         $this->storeTime = isset($config['options']['store_time']) ? strtolower($config['options']['store_time'])=="yes" : false;
         $this->storeUser = isset($config['options']['store_user']) ? strtolower($config['options']['store_user'])=="yes" : false;
@@ -194,12 +194,12 @@ final class Configuration
      *
      * @return string
      */
-    private function loadMandatoryVariable($configFile,$section,$varname)
+    private function loadMandatoryVariable($configFile, $section, $varname)
     {
-        try{
+        try {
             return $configFile[$section][$varname];
         }
-        catch(Exception $e){
+        catch (Exception $e) {
             throw new Exception( "Error loading config file. Variable $varname in section [$section] not found. Check the configuration file.");
         }
     }
