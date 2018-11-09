@@ -39,10 +39,10 @@ class SiteAnalyzer
         try {
             return Persistence::updateCount($pdo, $config, $options);
         } catch(Exception $e) {
-            try{
+            try {
                 Persistence::crateDatabase($pdo, $config);
                 return Persistence::updateCount($pdo, $config, $options);
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 throw new Exception("Site Analyzer could connect to the database.".$e->getMessage());
             };
             
@@ -59,10 +59,10 @@ class SiteAnalyzer
         $config = NULL;
         try {
             $config = new Configuration("../../../../site-analyzer.ini", $pdoProvided);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             try {
                 $config = new Configuration("site-analyzer.ini", $pdoProvided); 
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 throw Exception("Config file not found.");
             }
         }        
@@ -72,7 +72,7 @@ class SiteAnalyzer
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
-    public static function getStats($pdo=null, $renderer = null)
+    public static function getStats($pdo = null, $renderer = null)
     {         
         $config = new Configuration("site-analyzer.ini", isset($pdo));
         if ($pdo==null) {
@@ -121,7 +121,7 @@ class SiteAnalyzer
                 $count[$row['user']]++;
             }
             else {
-                $count[$row['user']]=1;
+                $count[$row['user']] = 1;
             }            
         }
         
@@ -132,20 +132,19 @@ class SiteAnalyzer
         return $resp;        
     }
     
-    
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
     public static function transform($data, $format)
     {
-        if($format=="html"){
+        if ($format=="html") {
             $resp = "<table style='border-collapse: collapse;border: 1px solid black;'>";
             foreach ($data as $row) {
-                $resp.="<tr style='border: 1px solid black;'>";
+                $resp .= "<tr style='border: 1px solid black;'>";
                 foreach ($row as $cell) {
-                    $resp.="<td style='border: 1px solid black;'>$cell</td>";
+                    $resp .= "<td style='border: 1px solid black;'>$cell</td>";
                 }  
-                $resp.="</tr>";
+                $resp .= "</tr>";
             }
             return $resp."</table>";
         }
