@@ -306,8 +306,6 @@ class Persistence{
             $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
             $stmt->execute([$id, time(), $user]);
         }
-                    
-        $stmt = null;
         
         return true;
     }
@@ -513,7 +511,6 @@ class Persistence{
                 }
             }
             
-            $stmt = null;
         }
         catch(Exception $e){
             throw new Exception("Error reading the database. Method getCounts().".$e->getMessage());
@@ -539,7 +536,6 @@ class Persistence{
                 }
             }
             
-            $stmt = null;
         }
         catch(Exception $e){
             throw new Exception("Error reading the database. Method getCounts().".$e->getMessage());
