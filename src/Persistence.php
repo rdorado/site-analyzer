@@ -202,23 +202,12 @@ class Persistence
         return true;        
     }
      
-    
     /*
      * @param $pdo PDO
      * @param $config Configuration
      *
      */
-    public static function updateCount($pdo, $config, $options = []) {
-
-        $db_hit_table = $config->getHitTableName();
-        $db_options_table = $config->getOptionsTableName();
-        $db_from_table = $config->getFromTableName();
-        $db_url_table = $config->getUrlTableName();
-
-        $store_from = true;
-        $store_time = true;
-        $store_user = true;
-        
+    public static function countHit($pdo, $config, $options = []) {
         if (array_key_exists('url', $options)) {
             $url = $options['url'];
         } else if (array_key_exists('HTTP_HOST', $_SERVER)) {
@@ -254,30 +243,41 @@ class Persistence
             $stmt->execute([$id, $url]);
         }
         
-        
-        if ($store_from) {
-                        
-            if (array_key_exists('from_id', $options)) {
-                $ids = [$options['from_id']];
-            } else {
-                $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'No referer info';
-                $ids = Persistence::findHitIdsByUrl($pdo, $config, $from_url); 
-                if (count($ids)==0) {
-                    $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
-                    $stmt->execute([$from_url, $from_url]);
-                    $ids = [$from_url];
-                }
-            }
-            foreach ($ids as $from_id) {
-                $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
-                $stmt->execute([$id, $from_id]);
-                if ($stmt->rowCount()==0) {
-                    $stmt = $pdo->prepare("INSERT INTO $db_from_table (id, from_id, count) VALUES (?, ?, 1)");
-                    $stmt->execute([$id, $from_id]);
-                }
+    }
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function countFrom($pdo, $config, $options = []) {
+        if (array_key_exists('from_id', $options)) {
+            $ids = [$options['from_id']];
+        } else {
+            $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'No referer info';
+            $ids = Persistence::findHitIdsByUrl($pdo, $config, $from_url); 
+            if (count($ids)==0) {
+                $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
+                $stmt->execute([$from_url, $from_url]);
+                $ids = [$from_url];
             }
         }
-                    
+        foreach ($ids as $from_id) {
+            $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
+            $stmt->execute([$id, $from_id]);
+            if ($stmt->rowCount()==0) {
+                $stmt = $pdo->prepare("INSERT INTO $db_from_table (id, from_id, count) VALUES (?, ?, 1)");
+                $stmt->execute([$id, $from_id]);
+            }
+        }
+    }
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function countOptions($pdo, $config, $options = []) {
         $user = null;
         if ($store_user) {
             if (array_key_exists('user', $options)) {
@@ -288,7 +288,30 @@ class Persistence
         if ($store_time || $store_user) {
             $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
             $stmt->execute([$id, time(), $user]);
-        }
+        }        
+    }
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function updateCount($pdo, $config, $options = []) {
+
+        $db_hit_table = $config->getHitTableName();
+        $db_options_table = $config->getOptionsTableName();
+        $db_from_table = $config->getFromTableName();
+        $db_url_table = $config->getUrlTableName();
+
+        $store_from = true;
+        $store_time = true;
+        $store_user = true;
+        
+        Persistence::countHit($pdo, $config, $options);
+        Persistence::countFrom($pdo, $config, $options);           
+        Persistence::countOptions($pdo, $config, $options); 
+                       
+
         
         return true;
     }
