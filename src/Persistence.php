@@ -44,7 +44,7 @@ class Persistence
         
         if ($config->getUseOnMemoryDB()) {
             try {
-                return new PDO("sqlite::memory:", $options);
+                return new PDO("sqlite::memory:", null, null, $options);
             } catch (Exception $e) {
                 throw new Exception("Could not create a db connection. Check permissions, configuration, and documentation. ".$e->getMessage());                
             }
