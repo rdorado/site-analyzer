@@ -31,14 +31,13 @@ class SiteAnalyzer
         
         if (array_key_exists('pdo', $options)) {            
             $pdo = $options['pdo'];	
-        }
-        else {            
+        } else {            
             $pdo = Persistence::getPDO($config);
         }
         
         try {
             return Persistence::updateCount($pdo, $config, $options);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             try {
                 Persistence::crateDatabase($pdo, $config);
                 return Persistence::updateCount($pdo, $config, $options);
