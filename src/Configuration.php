@@ -199,7 +199,7 @@ final class Configuration
         try {
             return $configFile[$section][$varname];
         } catch (Exception $e) {
-            throw new Exception( "Error loading config file. Variable $varname in section [$section] not found. Check the configuration file.");
+            throw new Exception("Error loading config file. Variable $varname in section [$section] not found. Check the configuration file.");
         }
     }
 
