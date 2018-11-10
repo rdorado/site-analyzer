@@ -31,7 +31,6 @@ Or modify your composer.json requirements:
 
 ```json
     "require": {
-        "monolog/monolog": "1.0.*",
         "rdorado/site-analyzer": "^0.0.1"
     }
 ```
