@@ -39,10 +39,9 @@ class HitDAO
      * @param $config Configuration
      *
      */
-    public static function countHit($pdo, $config, $id, $options = []) {
+    public static function countHit($pdo, $config, $id, $url) {
         $db_hit_table = $config->getHitTableName();
         $db_url_table = $config->getUrlTableName();
-
 
         $stmt = $pdo->prepare("UPDATE $db_hit_table SET count = count + 1 WHERE id = ?");
         $stmt->execute([$id]);
