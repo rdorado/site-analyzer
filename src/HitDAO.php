@@ -39,30 +39,10 @@ class HitDAO
      * @param $config Configuration
      *
      */
-    public static function countHit($pdo, $config, $options = []) {
+    public static function countHit($pdo, $config, $id, $options = []) {
         $db_hit_table = $config->getHitTableName();
         $db_url_table = $config->getUrlTableName();
-        
-        if (array_key_exists('url', $options)) {
-            $url = $options['url'];
-        } else if (array_key_exists('HTTP_HOST', $_SERVER)) {
-            $url = "http://".$_SERVER['HTTP_HOST'];
-            if (array_key_exists('REQUEST_URI', $_SERVER)) {
-                $url = $url.$_SERVER['REQUEST_URI'];
-            }               
-        } else {
-            $url = "No Info";
-        }
 
-        if ($config->getRemoveQueryString()) {
-            $url = preg_replace('/\?.*/', '', $url);
-        }
-        
-        if (array_key_exists('id', $options)) {
-            $id = $options['id'];
-        } else {
-            $id = $url;
-        }
 
         $stmt = $pdo->prepare("UPDATE $db_hit_table SET count = count + 1 WHERE id = ?");
         $stmt->execute([$id]);
