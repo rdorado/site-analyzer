@@ -25,7 +25,7 @@ class SiteAnalyzer
     /*
      * @param 
      */
-    static function count($options = [])
+    public static function count($options = [])
     {	
         $config = SiteAnalyzer::loadConfig(array_key_exists('pdo', $options));
         
@@ -62,7 +62,7 @@ class SiteAnalyzer
             try {
                 $config = new Configuration("site-analyzer.ini", $pdoProvided); 
             } catch (Exception $e) {
-                throw Exception("Config file not found.");
+                throw new Exception("Config file not found.");
             }
         }        
         return $config;
@@ -71,7 +71,7 @@ class SiteAnalyzer
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
-    public static function getStats($pdo = null, $renderer = null)
+    public static function getStats($pdo = null)
     {         
         $config = new Configuration("site-analyzer.ini", isset($pdo));
         if ($pdo==null) {
@@ -87,13 +87,13 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function groupHitsByTime($criteria, $pdo = null)
+    public static function groupHitsByTime($pdo = null)
     {
         $config = new Configuration("site-analyzer.ini", isset($pdo));
         if ($pdo==null) {
             $pdo = Persistence::getPDO($config);
         }
-        $data = Persistence::getHitsWithOptions($pdo, $config);
+        $data = OptionsDAO::getHitsWithOptions($pdo, $config);
         $resp = [];
         foreach ($data as $row) {
             $tmp = [$row['id']];
