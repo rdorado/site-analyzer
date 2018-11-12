@@ -185,8 +185,8 @@ final class Configuration
         
         $this->storeTime = $this->getBooleanParameter($config, "options", "store_time");
         $this->storeUser = $this->getBooleanParameter($config, "options", "store_user"); 
-        $this->storeFromInfo = $this->getBooleanParameterisset($config, "options", "store_from_info"); 
-        $this->removeQueryString = $this->getBooleanParameterisset($config, "options", "remove_query_string");  
+        $this->storeFromInfo = $this->getBooleanParameter($config, "options", "store_from_info"); 
+        $this->removeQueryString = $this->getBooleanParameter($config, "options", "remove_query_string");  
         
         $this->user = $this->getStringParameter($config, "database", "user"); 
         $this->password = $this->getStringParameter($config, "database", "password");  
