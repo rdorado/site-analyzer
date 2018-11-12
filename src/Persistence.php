@@ -12,7 +12,7 @@ use Exception;
 use PDO;
 
 /**
- * class SiteAnalyzer
+ * class Persistence
  *
  * @package   SiteAnalyzer
  * @author    Ruben Dorado <ruben.dorados@gmail.com>
