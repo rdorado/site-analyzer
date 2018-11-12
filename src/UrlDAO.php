@@ -20,7 +20,7 @@ class UrlDAO
 {
 
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      */
     public static function checkUrlTable($pdo, $config) {
@@ -35,7 +35,7 @@ class UrlDAO
     }
     
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
@@ -57,7 +57,7 @@ class UrlDAO
     }
     
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
