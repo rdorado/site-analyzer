@@ -20,7 +20,7 @@ class FromDAO
 {
 
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      */
     public static function checkFromTable($pdo, $config) {
@@ -35,22 +35,32 @@ class FromDAO
     }
     
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
     public static function countFrom($pdo, $config, $options = []) {
+        $db_url_table = $config->getUrlTableName();
+        $db_from_table = $config->getFromTableName();
+        
+        if (array_key_exists('id', $options)) {
+            $id = $options['id'];
+        } else {
+            $id = $url;
+        }        
+        
         if (array_key_exists('from_id', $options)) {
             $ids = [$options['from_id']];
         } else {
             $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'No referer info';
-            $ids = Persistence::findHitIdsByUrl($pdo, $config, $from_url); 
+            $ids = HitDAO::findHitIdsByUrl($pdo, $config, $from_url); 
             if (count($ids)==0) {
                 $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
                 $stmt->execute([$from_url, $from_url]);
                 $ids = [$from_url];
             }
         }
+        
         foreach ($ids as $from_id) {
             $stmt = $pdo->prepare("UPDATE $db_from_table SET count = count + 1 WHERE id = ? and from_id = ?");
             $stmt->execute([$id, $from_id]);
@@ -62,7 +72,7 @@ class FromDAO
     }
         
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
