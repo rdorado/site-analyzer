@@ -92,10 +92,10 @@ class Persistence
         $db_from_table = $config->getFromTableName();
         $db_url_table = $config->getUrlTableName();
         
-        $resp = $resp && Persistence::dropTable($pdo, $db_hit_table);
-        $resp = $resp && Persistence::dropTable($pdo, $db_options_table);
-        $resp = $resp && Persistence::dropTable($pdo, $db_from_table);
-        $resp = $resp && Persistence::dropTable($pdo, $db_url_table);
+        $resp = $resp && HitDAO::dropTable($pdo, $db_hit_table);
+        $resp = $resp && OptionsDAO::dropTable($pdo, $db_options_table);
+        $resp = $resp && FromDAO::dropTable($pdo, $db_from_table);
+        $resp = $resp && UrlDAO::dropTable($pdo, $db_url_table);
         
         return $resp;
     }
@@ -125,10 +125,10 @@ class Persistence
         $resp = true;      
         try {
             
-            $resp = $resp && Persistence::checkHitTable($pdo, $config);
-            $resp = $resp && Persistence::checkOptionsTable($pdo, $config);
-            $resp = $resp && Persistence::checkFromTable($pdo, $config);
-            $resp = $resp && Persistence::checkUrlTable($pdo, $config);
+            $resp = $resp && HitDAO::checkHitTable($pdo, $config);
+            $resp = $resp && OptionsDAO::checkOptionsTable($pdo, $config);
+            $resp = $resp && FromDAO::checkFromTable($pdo, $config);
+            $resp = $resp && UrlDAO::checkUrlTable($pdo, $config);
         } catch (Exception $e) {
             return false;
         }        
@@ -183,7 +183,7 @@ class Persistence
         
         HitDAO::countHit($pdo, $config, $id, $url);
         FromDAO::countFrom($pdo, $config, $id, $options);           
-        OptionsDAO::countOptions($pdo, $config, $options); 
+        OptionsDAO::countOptions($pdo, $config, $id, $options); 
         
         return true;
     }
