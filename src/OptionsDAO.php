@@ -20,7 +20,7 @@ class OptionsDAO
 {
 
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      */
     public static function checkOptionsTable($pdo, $config) {
@@ -35,26 +35,24 @@ class OptionsDAO
     }
     
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
-    public static function countOptions($pdo, $config, $options = []) {
+    public static function countOptions($pdo, $config, $id, $options = []) {
         $user = null;
-        if ($store_user) {
-            if (array_key_exists('user', $options)) {
-                $user = $options['user'];
-            }    
+        $db_options_table = $config->getOptionsTableName();
+                
+        if (array_key_exists('user', $options)) {
+            $user = $options['user'];   
         }
-        
-        if ($store_time || $store_user) {
-            $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
-            $stmt->execute([$id, time(), $user]);
-        }        
+                
+        $stmt = $pdo->prepare("INSERT INTO $db_options_table (id, time, user) VALUES (?, ?, ?)");
+        $stmt->execute([$id, time(), $user]);       
     }
     
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
@@ -98,7 +96,7 @@ class OptionsDAO
     }
     
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
