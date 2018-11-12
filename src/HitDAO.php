@@ -20,7 +20,7 @@ class HitDAO
 {
 
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      */
     public static function checkHitTable($pdo, $config) {
@@ -35,7 +35,7 @@ class HitDAO
     }
     
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
@@ -77,7 +77,7 @@ class HitDAO
     }
     
     /*
-     * @param $pdo PDO
+     * @param $pdo \PDO
      * @param $config Configuration
      *
      */
