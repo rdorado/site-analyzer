@@ -135,7 +135,29 @@ class Persistence
         return $resp;
 
     }
-        
+       
+    /*
+     * @param options
+     *
+     */
+    public static function getURL($options = []) {
+        if (array_key_exists('url', $options)) {
+            $url = $options['url'];
+        } else if (array_key_exists('HTTP_HOST', $_SERVER)) {
+            $url = "http://".$_SERVER['HTTP_HOST'];
+            if (array_key_exists('REQUEST_URI', $_SERVER)) {
+                $url = $url.$_SERVER['REQUEST_URI'];
+            }               
+        } else {
+            $url = "No Info";
+        }
+
+        if ($config->getRemoveQueryString()) {
+            $url = preg_replace('/\?.*/', '', $url);
+        }
+        return $url;
+    }
+    
     /*
      * @param $pdo PDO
      * @param $config Configuration
@@ -151,20 +173,7 @@ class Persistence
         $store_time = true;
         $store_user = true;
 
-        if (array_key_exists('url', $options)) {
-            $url = $options['url'];
-        } else if (array_key_exists('HTTP_HOST', $_SERVER)) {
-            $url = "http://".$_SERVER['HTTP_HOST'];
-            if (array_key_exists('REQUEST_URI', $_SERVER)) {
-                $url = $url.$_SERVER['REQUEST_URI'];
-            }               
-        } else {
-            $url = "No Info";
-        }
-
-        if ($config->getRemoveQueryString()) {
-            $url = preg_replace('/\?.*/', '', $url);
-        }
+        $url = Persistence::getUrl($options);
         
         if (array_key_exists('id', $options)) {
             $id = $options['id'];
@@ -172,7 +181,7 @@ class Persistence
             $id = $url;
         }    
         
-        HitDAO::countHit($pdo, $config, $id, $options);
+        HitDAO::countHit($pdo, $config, $id, $url);
         FromDAO::countFrom($pdo, $config, $id, $options);           
         OptionsDAO::countOptions($pdo, $config, $options); 
         
