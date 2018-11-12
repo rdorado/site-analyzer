@@ -184,7 +184,7 @@ final class Configuration
         $this->useOnMemoryDB = $this->loadMandatoryVariable($config, "database", "use_onmemorydb")=="yes";
         
         $this->storeTime = $this->getBooleanParameter($config, "options", "store_time");
-        $this->storeUser = = $this->getBooleanParameter($config, "options", "store_user"); 
+        $this->storeUser = $this->getBooleanParameter($config, "options", "store_user"); 
         $this->storeFromInfo = $this->getBooleanParameterisset($config, "options", "store_from_info"); 
         $this->removeQueryString = $this->getBooleanParameterisset($config, "options", "remove_query_string");  
         
