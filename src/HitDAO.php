@@ -74,10 +74,8 @@ class HitDAO
             $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
             $stmt->execute([$id, $url]);
         }
-        
     }
     
-        
     /*
      * @param $pdo PDO
      * @param $config Configuration
@@ -99,6 +97,5 @@ class HitDAO
         }
         return $resp;        
     }
-
 
 }
