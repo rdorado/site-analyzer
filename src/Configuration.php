@@ -164,10 +164,11 @@ final class Configuration
     public function getUseOnMemoryDB()
     {
         return $this->useOnMemoryDB;
-    }
+    }    
     
     /*
-     * @param configFileName
+     * @param configFileName string
+     * @param pdoProvided boolean
      */
     public function __construct($configFileName, $pdoProvided = FALSE)
     {    
@@ -182,15 +183,30 @@ final class Configuration
         $this->urlTableName = $this->loadMandatoryVariable($config, "database", "db_url_table");
         $this->useOnMemoryDB = $this->loadMandatoryVariable($config, "database", "use_onmemorydb")=="yes";
         
-        $this->storeTime = isset($config['options']['store_time']) ? strtolower($config['options']['store_time'])=="yes" : false;
-        $this->storeUser = isset($config['options']['store_user']) ? strtolower($config['options']['store_user'])=="yes" : false;
-        $this->storeFromInfo = isset($config['options']['store_from_info']) ? strtolower($config['options']['store_from_info'])=="yes|" : false;
-        $this->removeQueryString = isset($config['options']['remove_query_string']) ? strtolower($config['options']['store_from_info'])=="yes" : false;
+        $this->storeTime = $this->getBooleanParameter($config, "options", "store_time");
+        $this->storeUser = = $this->getBooleanParameter($config, "options", "store_user"); 
+        $this->storeFromInfo = $this->getBooleanParameterisset($config, "options", "store_from_info"); 
+        $this->removeQueryString = $this->getBooleanParameterisset($config, "options", "remove_query_string");  
         
-        $this->user = isset($config['database']['user']) ? $config['database']['user'] : NULL;
-        $this->password = isset($config['database']['password']) ? $config['database']['password'] : NULL;
+        $this->user = $this->getStringParameter($config, "database", "user"); 
+        $this->password = $this->getStringParameter($config, "database", "password");  
     }
 
+    /*
+     * @param name string
+     */
+    private static function getStringParameter($config, $section, $name)
+    {    
+        return isset($config[$section][$name]) ?  $config[$section][$name] : NULL;
+    }
+    
+    /*
+     * @param name string
+     */
+    private static function getBooleanParameter($config, $section, $name)
+    {    
+        return isset($config[$section][$name]) ? strtolower($config[$section][$name])=="yes" : false;
+    }
 
     /*
      * @param configFileName string
