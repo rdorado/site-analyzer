@@ -39,15 +39,9 @@ class FromDAO
      * @param $config Configuration
      *
      */
-    public static function countFrom($pdo, $config, $options = []) {
+    public static function countFrom($pdo, $config, $id, $options = []) {
         $db_url_table = $config->getUrlTableName();
-        $db_from_table = $config->getFromTableName();
-        
-        if (array_key_exists('id', $options)) {
-            $id = $options['id'];
-        } else {
-            $id = $url;
-        }        
+        $db_from_table = $config->getFromTableName(); 
         
         if (array_key_exists('from_id', $options)) {
             $ids = [$options['from_id']];
