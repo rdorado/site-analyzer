@@ -40,6 +40,9 @@ class HitDAO
      *
      */
     public static function countHit($pdo, $config, $options = []) {
+        $db_hit_table = $config->getHitTableName();
+        $db_url_table = $config->getUrlTableName();
+        
         if (array_key_exists('url', $options)) {
             $url = $options['url'];
         } else if (array_key_exists('HTTP_HOST', $_SERVER)) {
@@ -81,7 +84,7 @@ class HitDAO
      * @param $config Configuration
      *
      */
-    public static function getAllHits($pdo, $config) {
+    public static function getAllHits($pdo, $config) {        
         $resp = [];
         try {
             $dbtable = $config->getHitTableName();
