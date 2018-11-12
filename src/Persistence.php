@@ -92,10 +92,10 @@ class Persistence
         $db_from_table = $config->getFromTableName();
         $db_url_table = $config->getUrlTableName();
         
-        $resp = $resp && HitDAO::dropTable($pdo, $db_hit_table);
-        $resp = $resp && OptionsDAO::dropTable($pdo, $db_options_table);
-        $resp = $resp && FromDAO::dropTable($pdo, $db_from_table);
-        $resp = $resp && UrlDAO::dropTable($pdo, $db_url_table);
+        $resp = $resp && Persistence::dropTable($pdo, $db_hit_table);
+        $resp = $resp && Persistence::dropTable($pdo, $db_options_table);
+        $resp = $resp && Persistence::dropTable($pdo, $db_from_table);
+        $resp = $resp && Persistence::dropTable($pdo, $db_url_table);
         
         return $resp;
     }
@@ -140,7 +140,7 @@ class Persistence
      * @param options
      *
      */
-    public static function getURL($options = []) {
+    public static function getURL($config, $options = []) {
         if (array_key_exists('url', $options)) {
             $url = $options['url'];
         } else if (array_key_exists('HTTP_HOST', $_SERVER)) {
@@ -164,16 +164,7 @@ class Persistence
      *
      */
     public static function updateCount($pdo, $config, $options = []) {
-        $db_hit_table = $config->getHitTableName();
-        $db_options_table = $config->getOptionsTableName();
-        $db_from_table = $config->getFromTableName();
-        $db_url_table = $config->getUrlTableName();
-
-        $store_from = true;
-        $store_time = true;
-        $store_user = true;
-
-        $url = Persistence::getUrl($options);
+        $url = Persistence::getUrl($config, $options);
         
         if (array_key_exists('id', $options)) {
             $id = $options['id'];
@@ -227,7 +218,7 @@ class Persistence
      *
      */    
     public static function getCountsById($pdo, $config) {
-        return "Works";
+        return "Works ".$pdo." ".$config;
     }
     
 }
