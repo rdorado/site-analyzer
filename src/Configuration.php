@@ -55,25 +55,30 @@ final class Configuration
     /**
      * @var string
      */
+    protected $urlTableName;
+    
+    /**
+     * @var boolean
+     */
     protected $storeTime;
 
     /**
-     * @var string
+     * @var boolean
      */
     protected $storeUser;
     
     /**
-     * @var string
+     * @var boolean
      */
     protected $storeFromInfo;
     
     /**
-     * @var string
+     * @var boolean
      */
     protected $removeQueryString;
 
     /**
-     * @var string
+     * @var boolean
      */
     protected $useOnMemoryDB;
     
