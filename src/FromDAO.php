@@ -47,7 +47,7 @@ class FromDAO
             $ids = [$options['from_id']];
         } else {
             $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'No referer info';
-            $ids = HitDAO::findHitIdsByUrl($pdo, $config, $from_url); 
+            $ids = UrlDAO::findHitIdsByUrl($pdo, $config, $from_url); 
             if (count($ids)==0) {
                 $stmt = $pdo->prepare("INSERT INTO $db_url_table (id, url, count) VALUES (?, ?, 1)");
                 $stmt->execute([$from_url, $from_url]);
