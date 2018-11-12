@@ -55,7 +55,6 @@ class SiteAnalyzer
      */
     public static function loadConfig($pdoProvided = FALSE)
     {
-        $config = NULL;
         try {
             $config = new Configuration("../../../../site-analyzer.ini", $pdoProvided);
         } catch (Exception $e) {
@@ -113,7 +112,7 @@ class SiteAnalyzer
         if ($pdo==null) {
             $pdo = Persistence::getPDO($config);
         }
-        $data = Persistence::getHitsWithOptions($pdo, $config);        
+        $data = OptionsDAO::getHitsWithOptions($pdo, $config);        
         $count = [];
         foreach ($data as $row) {
             if (array_key_exists($row['user'], $count)) {
