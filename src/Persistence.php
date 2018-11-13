@@ -221,6 +221,41 @@ class Persistence
         return "Works ".$pdo." ".$config;
     }
     
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function getAllHits($pdo, $config) {
+        return HitDAO::getAllHits($pdo, $config);
+    }
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function findUrls($pdo, $config, $by = []) {
+        return UrlDAO::findUrls($pdo, $config, $by);
+    }
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function findIdByTimeUser($pdo, $config, $by=[]) {
+        return OptionsDAO::findIdByTimeUser($pdo, $config, $by);
+    }
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function findByFrom($pdo, $config, $by = []) {
+        return FromDAO::findByFrom($pdo, $config, $by);
+    }
 }
 
 

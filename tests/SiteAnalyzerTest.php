@@ -11,7 +11,7 @@ final class SiteAnalyzerTest extends TestCase
 
     }
 
-    public function testDropDatabase()
+/*    public function testDropDatabase()
     {
 
     }
@@ -54,7 +54,7 @@ final class SiteAnalyzerTest extends TestCase
     public function testCountAll()
     {
 
-    }
+    }*/
 
 
 

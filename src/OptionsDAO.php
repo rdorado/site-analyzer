@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 namespace SiteAnalyzer;
+
 use Exception;
 /**
  * class OptionsDAO

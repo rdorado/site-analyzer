@@ -86,13 +86,13 @@ class PersistenceTest extends TestCase
         }
         catch(Exception $e) {};
         
-        $resp = Persistence::checkHitTable($pdo, $this->configuration);
+        $resp = HitDAO::checkHitTable($pdo, $this->configuration);
         $this->assertTrue($resp);
         
-        $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
+        $resp = OptionsDAO::checkOptionsTable($pdo, $this->configuration);
         $this->assertTrue($resp);
         
-        $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
+        $resp = UrlDAO::checkUrlTable($pdo, $this->configuration);
         $this->assertTrue($resp);
         
         $resp = Persistence::checkTables($pdo, $this->configuration);
@@ -103,13 +103,13 @@ class PersistenceTest extends TestCase
         }
         catch(Exception $e) {};
         
-        $resp = Persistence::checkHitTable($pdo, $this->configuration);
+        $resp = HitDAO::checkHitTable($pdo, $this->configuration);
         $this->assertFalse($resp);
         
-        $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
+        $resp = OptionsDAO::checkOptionsTable($pdo, $this->configuration);
         $this->assertFalse($resp);
         
-        $resp = Persistence::checkOptionsTable($pdo, $this->configuration);
+        $resp = UrlDAO::checkUrlTable($pdo, $this->configuration);
         $this->assertFalse($resp);
         
         $resp = Persistence::checkTables($pdo, $this->configuration);
@@ -297,7 +297,7 @@ class PersistenceTest extends TestCase
         $resp = Persistence::findByFrom($pdo, $this->configuration);
         $this->assertEquals(count($resp), 2);
         
-        $find_options = ['url' => 'http://test.test'];
+        /*$find_options = ['url' => 'http://test.test'];
         $resp = Persistence::findByFrom($pdo, $this->configuration, $find_options);
         $this->assertEquals(count($resp), 1);
         
@@ -310,7 +310,7 @@ class PersistenceTest extends TestCase
         $this->assertEquals(count($resp), 2);
         
         $this->printTable($resp);
-        /* */
+        */
         
     }
     
