@@ -1,5 +1,6 @@
 Site Analyzer
 =============
+
  
 [![MIT License](https://img.shields.io/packagist/l/cocur/slugify.svg)](http://opensource.org/licenses/MIT)
 [![Latest Release](https://img.shields.io/packagist/v/cocur/slugify.svg)](https://packagist.org/packages/rdorado/site-analyzer)

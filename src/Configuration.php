@@ -229,7 +229,6 @@ final class Configuration
         }
     }
 
-
     /*
      * @param configFileName string
      */
@@ -238,6 +237,5 @@ final class Configuration
         $config = new Configuration($configFileName);
         return $config;
     }
-
 
 }
