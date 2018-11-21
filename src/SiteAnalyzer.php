@@ -34,6 +34,8 @@ class SiteAnalyzer
         } else {            
             $pdo = Persistence::getPDO($config);
         }
+        print("-->");
+        var_dump($pdo);
         
         try {
             return Persistence::updateCount($pdo, $config, $options);

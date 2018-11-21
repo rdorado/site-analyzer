@@ -171,7 +171,11 @@ final class Configuration
      * @param pdoProvided boolean
      */
     public function __construct($configFileName, $pdoProvided = FALSE)
-    {    
+    {   
+        if (!file_exists($configFileName)) {
+            print(getcwd()."/".$configFileName);
+            throw new Exception("File ".getcwd()."/".$configFileName." not found.");
+        }
         $config = parse_ini_file($configFileName, TRUE); 
         if (!$pdoProvided) {
             $this->dsn = $this->loadMandatoryVariable($config, "database", "dsn");
@@ -181,8 +185,8 @@ final class Configuration
         $this->fromTableName = $this->loadMandatoryVariable($config, "database", "db_from_table");        
         $this->optionsTableName = $this->loadMandatoryVariable($config, "database", "db_options_table");
         $this->urlTableName = $this->loadMandatoryVariable($config, "database", "db_url_table");
-        $this->useOnMemoryDB = $this->loadMandatoryVariable($config, "database", "use_onmemorydb")=="yes";
-        
+        $this->useOnMemoryDB = $this->getBooleanParameter($config, "database", "use_onmemorydb");
+                
         $this->storeTime = $this->getBooleanParameter($config, "options", "store_time");
         $this->storeUser = $this->getBooleanParameter($config, "options", "store_user"); 
         $this->storeFromInfo = $this->getBooleanParameter($config, "options", "store_from_info"); 
@@ -204,8 +208,9 @@ final class Configuration
      * @param name string
      */
     private static function getBooleanParameter($config, $section, $name)
-    {    
-        return isset($config[$section][$name]) ? strtolower($config[$section][$name])=="yes" : false;
+    {   
+        var_dump($config[$section][$name]!=0);
+        return isset($config[$section][$name]) ? $config[$section][$name]!=0 : false;
     }
 
     /*

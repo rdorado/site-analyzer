@@ -30,18 +30,23 @@ class Persistence
     public static function getPDO($config) {
         $options = array(
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        );
+        );        
         
         if ($config->getDsn()) {
+
             try {
-                return new PDO($config->getDsn(), $config->getUser(), $config->getPassword(), $options);
+                print("--->true");
+                $pdo = new PDO($config->getDsn(), $config->getUser(), $config->getPassword(), $options);
+                //if($config->getUseOnMemoryDB())
+
+                return $pdo;
             } catch (Exception $e) {                
                 if (!$config->getUseOnMemoryDB()) {
                     throw new Exception("Could not create a db connection. Check permissions, configuration, and documentation. ".$e->getMessage());
                 }
             }
         }
-        
+            
         if ($config->getUseOnMemoryDB()) {
             try {
                 return new PDO("sqlite::memory:", null, null, $options);
