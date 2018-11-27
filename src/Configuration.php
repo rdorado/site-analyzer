@@ -163,6 +163,8 @@ final class Configuration
      */
     public function getUseOnMemoryDB()
     {
+        var_dump($this->useOnMemoryDB);
+        print("-ss--->".gettype($this->useOnMemoryDB));
         return $this->useOnMemoryDB;
     }    
     
@@ -209,8 +211,7 @@ final class Configuration
      */
     private static function getBooleanParameter($config, $section, $name)
     {   
-        var_dump($config[$section][$name]!=0);
-        return isset($config[$section][$name]) ? $config[$section][$name]!=0 : false;
+        return isset($config[$section][$name]) ? $config[$section][$name]!==0 : false;
     }
 
     /*

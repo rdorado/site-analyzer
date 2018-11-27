@@ -38,7 +38,8 @@ final class ConfigurationTest extends TestCase
         $val = $config->getHitTableName();
         $this->assertNotNull($val);
         
-        
+        $val = $config->getUseOnMemoryDB();
+        $this->assertTrue($val);
         /*  */
     }
 

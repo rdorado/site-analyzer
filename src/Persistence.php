@@ -35,12 +35,9 @@ class Persistence
         if ($config->getDsn()) {
 
             try {
-                print("--->true");
-                $pdo = new PDO($config->getDsn(), $config->getUser(), $config->getPassword(), $options);
-                //if($config->getUseOnMemoryDB())
-
-                return $pdo;
-            } catch (Exception $e) {                
+                return new PDO($config->getDsn(), $config->getUser(), $config->getPassword(), $options);
+            } catch (Exception $e) {
+                print("--->".$config->getUseOnMemoryDB());
                 if (!$config->getUseOnMemoryDB()) {
                     throw new Exception("Could not create a db connection. Check permissions, configuration, and documentation. ".$e->getMessage());
                 }
