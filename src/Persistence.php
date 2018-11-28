@@ -35,16 +35,19 @@ class Persistence
         if ($config->getDsn()) {
 
             try {
-                return new PDO($config->getDsn(), $config->getUser(), $config->getPassword(), $options);
-            } catch (Exception $e) {
-                print("--->".$config->getUseOnMemoryDB());
-                if (!$config->getUseOnMemoryDB()) {
+                print($config->getDsn().", ".$config->getUser().", ".$config->getPassword());
+                print("-->()");
+                $pdo = new PDO($config->getDsn(), $config->getUser(), $config->getPassword(), $options);
+                print("-->()");
+                return $pdo;
+            } catch (Exception $e) {                
+                if ($config->getUseOnMemoryDB() !== true) {
                     throw new Exception("Could not create a db connection. Check permissions, configuration, and documentation. ".$e->getMessage());
                 }
             }
         }
             
-        if ($config->getUseOnMemoryDB()) {
+        if ($config->getUseOnMemoryDB() === true) {
             try {
                 return new PDO("sqlite::memory:", null, null, $options);
             } catch (Exception $e) {

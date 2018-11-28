@@ -163,8 +163,8 @@ final class Configuration
      */
     public function getUseOnMemoryDB()
     {
-        var_dump($this->useOnMemoryDB);
-        print("-ss--->".gettype($this->useOnMemoryDB));
+        //var_dump($this->useOnMemoryDB);
+        //print("-ss--->".gettype($this->useOnMemoryDB));
         return $this->useOnMemoryDB;
     }    
     

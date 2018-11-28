@@ -34,7 +34,7 @@ class SiteAnalyzer
         } else {            
             $pdo = Persistence::getPDO($config);
         }
-        print("-->");
+        //print("-->");
         var_dump($pdo);
         
         try {
@@ -73,11 +73,13 @@ class SiteAnalyzer
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
     public static function getStats($pdo = null)
-    {         
-        $config = new Configuration("site-analyzer.ini", isset($pdo));
+    {   
+        $config = SiteAnalyzer::loadConfig();
+        //*$config = new Configuration("site-analyzer.ini", isset($pdo));
         if ($pdo==null) {
             $pdo = Persistence::getPDO($config);
         }
+        
         $data = Persistence::getCounts($pdo, $config);
         return $data;
     } 
