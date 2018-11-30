@@ -33,29 +33,13 @@ class Persistence
         );        
         
         if ($config->getDsn()) {
-
             try {
-                print($config->getDsn().", ".$config->getUser().", ".$config->getPassword());
-                print("-->()");
-                $pdo = new PDO($config->getDsn(), $config->getUser(), $config->getPassword(), $options);
-                print("-->()");
-                return $pdo;
-            } catch (Exception $e) {                
-                if ($config->getUseOnMemoryDB() !== true) {
-                    throw new Exception("Could not create a db connection. Check permissions, configuration, and documentation. ".$e->getMessage());
-                }
+                return new PDO($config->getDsn(), $config->getUser(), $config->getPassword(), $options);
+            } catch (Exception $e) {                                
+                throw new Exception("Could not create a db connection to '".$config->getDsn()."'. Check permissions, configuration, and documentation. ".$e->getMessage());
             }
         }
             
-        if ($config->getUseOnMemoryDB() === true) {
-            try {
-                return new PDO("sqlite::memory:", null, null, $options);
-            } catch (Exception $e) {
-                throw new Exception("Could not create a db connection. Check permissions, configuration, and documentation. ".$e->getMessage());                
-            }
-        }
-        throw new Exception("Error when trying to obtain a connection to a database. Check the configuration. ");
-
     }
 
     /*
@@ -70,6 +54,7 @@ class Persistence
             $db_from_table = $config->getFromTableName();
             $db_url_table = $config->getUrlTableName();
 
+            print($db_hit_table);
             $stmt = $pdo->prepare("CREATE TABLE $db_hit_table (id VARCHAR(255), count INT)");
             $stmt->execute();
             $stmt = $pdo->prepare("CREATE TABLE $db_options_table (id VARCHAR(255), time TIMESTAMP, user VARCHAR(255))");
@@ -78,6 +63,7 @@ class Persistence
             $stmt->execute();
             $stmt = $pdo->prepare("CREATE TABLE $db_url_table (id VARCHAR(255), url VARCHAR(255), count INT)");
             $stmt->execute();
+            
         } catch (Exception $e) {
             throw new Exception("Could not create the database. ".$e->getMessage());
         }        
