@@ -163,8 +163,6 @@ final class Configuration
      */
     public function getUseOnMemoryDB()
     {
-        //var_dump($this->useOnMemoryDB);
-        //print("-ss--->".gettype($this->useOnMemoryDB));
         return $this->useOnMemoryDB;
     }    
     
@@ -175,7 +173,6 @@ final class Configuration
     public function __construct($configFileName, $pdoProvided = FALSE)
     {   
         if (!file_exists($configFileName)) {
-            print(getcwd()."/".$configFileName);
             throw new Exception("File ".getcwd()."/".$configFileName." not found.");
         }
         $config = parse_ini_file($configFileName, TRUE); 
