@@ -86,9 +86,9 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function groupHitsByTime($pdo = null)
+    public static function groupHitsByTime($options, $pdo = null)
     {
-        $config = new Configuration("site-analyzer.ini", isset($pdo));
+        $config = SiteAnalyzer::loadConfig();
         if ($pdo==null) {
             $pdo = Persistence::getPDO($config);
         }
