@@ -152,7 +152,7 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function getRelationLinks()
+    public static function getTransitionMatrix()
     {
 
     } 
@@ -161,7 +161,7 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function getABTest()
+    public static function performABTest($tests, $targets)
     {
 
     } 
