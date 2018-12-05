@@ -79,12 +79,11 @@ class FromDAO
         $tquery = "SELECT f.* FROM $dbFromtable f";
             
         if (array_key_exists('url', $by)) {
+            $qdata = [$by['url']];
+            $tquery = "SELECT f.* FROM $dbFromtable f,$dbUrltable u where f.from_id = u.id and u.url = ?";            
             if (array_key_exists('id', $by)) {
                 $qdata = [$by['url'], $by['id']];
                 $tquery = "SELECT f.* FROM  $dbFromtable f,$dbUrltable u WHERE (f.from_id = u.id and f.url = ?) or f.from_id = ?";                                
-            } else {
-                $qdata = [$by['url']];
-                $tquery = "SELECT f.* FROM $dbFromtable f,$dbUrltable u where f.from_id = u.id and u.url = ?";
             }
         } else if (array_key_exists('id', $by)) {
             $qdata = [$by['id']];
@@ -92,10 +91,9 @@ class FromDAO
         } 
                                     
         $stmt = $pdo->prepare($tquery);
-        if ($stmt->execute($qdata)) {
-            while ($row = $stmt->fetch()) {
-                $resp[] = [$row['id'], $row['from_id'], $row['count']];
-            }
+        $stmt->execute($qdata);        
+        while ($row = $stmt->fetch()) {
+            $resp[] = [$row['id'], $row['from_id'], $row['count']];            
         }
             
         return $resp;
