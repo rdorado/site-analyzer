@@ -62,9 +62,9 @@ class OptionsDAO
         $dbtable = $config->getOptionsTableName();
         $qdata = [];
         $tquery = [];
-        $keySql = [ 'from'=>"time >= ?", 
-                    'to'=>"time <= ?", 
-                    'user'=>"user = ?" 
+        $keySql = ['from'=>"time >= ?", 
+                   'to'=>"time <= ?", 
+                   'user'=>"user = ?" 
         ];
         
         foreach ($keySql as $key => $sql){
