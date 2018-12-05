@@ -62,21 +62,17 @@ class OptionsDAO
         $dbtable = $config->getOptionsTableName();
         $qdata = [];
         $tquery = [];
-        if (array_key_exists('from', $by)) {
-            $qdata[] = $by['from'];
-            $tquery[] = "time >= ?";
+        $keySql = {'from'=>"time >= ?", 
+                   'to'=>"time <= ?", 
+                   'user'=>"user = ?" };
+        
+        for ($keySql as $key => $sql){
+            if (array_key_exists($key, $by)) {
+                $qdata[] = $by[$key];
+                $tquery[] = $sql;
+            }
         }
-            
-        if (array_key_exists('to', $by)) {
-            $qdata[] = $by['to'];
-            $tquery[] = "time <= ?";
-        }
-            
-        if (array_key_exists('user', $by)) {
-            $qdata[] = $by['user'];
-            $tquery[] = "user = ?";
-        }
-            
+                        
         $sql = "SELECT id,time,user FROM $dbtable";
         if (count($tquery) > 0) {
             $sql = $sql." WHERE ".join(" AND ", $tquery);
