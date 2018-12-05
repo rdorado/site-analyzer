@@ -59,40 +59,35 @@ class OptionsDAO
      */
     public static function findIdByTimeUser($pdo, $config, $by = []) {
         $resp = [];
-        try {
-            $dbtable = $config->getOptionsTableName();
-            $qdata = [];
-            $tquery = [];
-            if (array_key_exists('from', $by)) {
-                $qdata[] = $by['from'];
-                $tquery[] = "time >= ?";
-            }
-            
-            if (array_key_exists('to', $by)) {
-                $qdata[] = $by['to'];
-                $tquery[] = "time <= ?";
-            }
-            
-            if (array_key_exists('user', $by)) {
-                $qdata[] = $by['user'];
-                $tquery[] = "user = ?";
-            }
-            
-            $sql = "SELECT id,time,user FROM $dbtable";
-            if (count($tquery) > 0) {
-                $sql = $sql." WHERE ".join(" AND ", $tquery);
-            }
-            
-            $stmt = $pdo->prepare($sql);
-            if ($stmt->execute($qdata)) {
-                while ($row = $stmt->fetch()) {
-                    $resp[] = [$row['id'], $row['time'], $row['user']];
-                }
-            }
-            
-        } catch (Exception $e) {
-            throw new Exception("Error executing function 'getAllUrls'. ".$e->getMessage());
+        $dbtable = $config->getOptionsTableName();
+        $qdata = [];
+        $tquery = [];
+        if (array_key_exists('from', $by)) {
+            $qdata[] = $by['from'];
+            $tquery[] = "time >= ?";
         }
+            
+        if (array_key_exists('to', $by)) {
+            $qdata[] = $by['to'];
+            $tquery[] = "time <= ?";
+        }
+            
+        if (array_key_exists('user', $by)) {
+            $qdata[] = $by['user'];
+            $tquery[] = "user = ?";
+        }
+            
+        $sql = "SELECT id,time,user FROM $dbtable";
+        if (count($tquery) > 0) {
+            $sql = $sql." WHERE ".join(" AND ", $tquery);
+        }
+            
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($qdata);
+        while ($row = $stmt->fetch()) {
+            $resp[] = [$row['id'], $row['time'], $row['user']];
+        }
+            
         return $resp;
     }
     
@@ -103,19 +98,14 @@ class OptionsDAO
      */
     public static function getHitsWithOptions($pdo, $config) {
         $resp = [];
-        try {
             
-            $dbOptionsTable = $config->getOptionsTableName();
-            $stmt = $pdo->prepare("SELECT o.id, o.time, o.user FROM $dbOptionsTable o");
-            if ($stmt->execute()) {
-                while ($row = $stmt->fetch()) {
-                    $resp[] = ['id'=>$row[0], 'time'=>$row[1], 'user'=>$row[2]];
-                }
-            }
-            
-        } catch (Exception $e) {
-            throw new Exception("Error reading the database. Method getCounts().".$e->getMessage());
+        $dbOptionsTable = $config->getOptionsTableName();
+        $stmt = $pdo->prepare("SELECT o.id, o.time, o.user FROM $dbOptionsTable o");
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $resp[] = ['id'=>$row[0], 'time'=>$row[1], 'user'=>$row[2]];
         }
+            
         return $resp;
     }
     
