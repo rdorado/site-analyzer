@@ -67,7 +67,7 @@ class OptionsDAO
                     'user'=>"user = ?" 
         ];
         
-        for ($keySql as $key => $sql){
+        foreach ($keySql as $key => $sql){
             if (array_key_exists($key, $by)) {
                 $qdata[] = $by[$key];
                 $tquery[] = $sql;
