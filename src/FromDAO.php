@@ -76,7 +76,7 @@ class FromDAO
             $dbFromtable = $config->getFromTableName();
             $dbUrltable = $config->getUrlTableName();
             $qdata = [];
-            $tquery = [];
+            $tquery = "SELECT f.* FROM $dbFromtable f";
             
             if (array_key_exists('url', $by) && array_key_exists('id', $by)) {
                 $qdata = [$by['url'], $by['id']];
@@ -87,10 +87,7 @@ class FromDAO
             } else if (array_key_exists('id', $by)) {
                 $qdata = [$by['id']];
                 $tquery = "SELECT f.* FROM $dbFromtable f where f.from_id = ?";
-            } else {
-                $qdata = [];
-                $tquery = "SELECT f.* FROM $dbFromtable f";
-            }
+            } 
                                     
             $stmt = $pdo->prepare($tquery);
             if ($stmt->execute($qdata)) {
