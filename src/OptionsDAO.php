@@ -63,8 +63,8 @@ class OptionsDAO
         $qdata = [];
         $tquery = [];
         $keySql = ['from'=>"time >= ?", 
-                   'to'=>"time <= ?", 
-                   'user'=>"user = ?" 
+                    'to'=>"time <= ?", 
+                    'user'=>"user = ?" 
         ];
         
         foreach ($keySql as $key => $sql) {
