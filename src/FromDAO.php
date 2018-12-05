@@ -72,33 +72,30 @@ class FromDAO
      */
     public static function findByFrom($pdo, $config, $by = []) {
         $resp = [];
-        try {
-            $dbFromtable = $config->getFromTableName();
-            $dbUrltable = $config->getUrlTableName();
-            $qdata = [];
-            $tquery = "SELECT f.* FROM $dbFromtable f";
+
+        $dbFromtable = $config->getFromTableName();
+        $dbUrltable = $config->getUrlTableName();
+        $qdata = [];
+        $tquery = "SELECT f.* FROM $dbFromtable f";
             
-            if (array_key_exists('url', $by) && array_key_exists('id', $by)) {
-                $qdata = [$by['url'], $by['id']];
-                $tquery = "SELECT f.* FROM  $dbFromtable f,$dbUrltable u WHERE (f.from_id = u.id and f.url = ?) or f.from_id = ?";                
-            } else if (array_key_exists('url', $by)) {
-                $qdata = [$by['url']];
-                $tquery = "SELECT f.* FROM $dbFromtable f,$dbUrltable u where f.from_id = u.id and u.url = ?";
-            } else if (array_key_exists('id', $by)) {
-                $qdata = [$by['id']];
-                $tquery = "SELECT f.* FROM $dbFromtable f where f.from_id = ?";
-            } 
+        if (array_key_exists('url', $by) && array_key_exists('id', $by)) {
+            $qdata = [$by['url'], $by['id']];
+            $tquery = "SELECT f.* FROM  $dbFromtable f,$dbUrltable u WHERE (f.from_id = u.id and f.url = ?) or f.from_id = ?";                
+        } else if (array_key_exists('url', $by)) {
+            $qdata = [$by['url']];
+            $tquery = "SELECT f.* FROM $dbFromtable f,$dbUrltable u where f.from_id = u.id and u.url = ?";
+        } else if (array_key_exists('id', $by)) {
+            $qdata = [$by['id']];
+            $tquery = "SELECT f.* FROM $dbFromtable f where f.from_id = ?";
+        } 
                                     
-            $stmt = $pdo->prepare($tquery);
-            if ($stmt->execute($qdata)) {
-                while ($row = $stmt->fetch()) {
-                    $resp[] = [$row['id'], $row['from_id'], $row['count']];
-                }
+        $stmt = $pdo->prepare($tquery);
+        if ($stmt->execute($qdata)) {
+            while ($row = $stmt->fetch()) {
+                $resp[] = [$row['id'], $row['from_id'], $row['count']];
             }
-            
-        } catch (Exception $e) {
-            throw new Exception("Error executing function 'findByFrom'. ".$e->getMessage());
         }
+            
         return $resp;
     }
     
