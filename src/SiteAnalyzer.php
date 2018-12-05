@@ -20,7 +20,6 @@ use Exception;
  */
 class SiteAnalyzer
 {
-
     
     /*
      * @param 
@@ -48,7 +47,6 @@ class SiteAnalyzer
         };
             
     }
-
     
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
@@ -82,7 +80,6 @@ class SiteAnalyzer
         return $data;
     } 
 
-    
     /*
      * @param
      */
@@ -102,7 +99,6 @@ class SiteAnalyzer
         return $resp;        
     }
     
-
     /*
      * @param
      */
@@ -146,8 +142,7 @@ class SiteAnalyzer
             return $resp."</table>";
         }
         return $data; 
-    } 
-
+    }
 
     /*
      * @param
@@ -156,15 +151,24 @@ class SiteAnalyzer
     {
 
     } 
- 
 
     /*
      * @param
      */
-    public static function performABTest($tests, $targets)
+    public static function performABTest($tests)
     {
-
+        $testCounts = Persistence::getCountsByIds(array_keys($tests));
+        $pairs = toPairs($tests);
+        $data = Persistence::getFromByIds($pairs);
+        
     } 
-
+    
+    /*
+     * @param
+     */
+    public static function findVisitProfiles($nprofiles)
+    {
+        //$testCounts = Persistence::getCountsByIds(array_keys($tests));
+    }
 }
 
