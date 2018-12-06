@@ -76,7 +76,7 @@ class FromDAO
             $dbFromtable = $config->getFromTableName();
             $dbUrltable = $config->getUrlTableName();
             $qdata = [];
-            $tquery = [];
+            $tquery = "";
             
             if (array_key_exists('url', $by) && array_key_exists('id', $by)) {
                 $qdata = [$by['url'], $by['id']];
@@ -104,5 +104,32 @@ class FromDAO
         }
         return $resp;
     }
+
+    
+    /*
+     * @param $pdo \PDO
+     * @param $config Configuration
+     *
+     */
+    public static function findAll($pdo, $config) {
+        $resp = [];
+        try {
+            $dbFromtable = $config->getFromTableName();
+            $query = "SELECT f.* FROM  $dbFromtable";
+            
+            
+            $stmt = $pdo->prepare($query);
+            if ($stmt->execute()) {
+                while ($row = $stmt->fetch()) {
+                    $resp[] = [$row['id'], $row['from_id'], $row['count']];
+                }
+            }
+            
+        } catch (Exception $e) {
+            throw new Exception("Error executing function 'findAll'. ".$e->getMessage());
+        }
+        return $resp;
+    }
+    
     
 }
