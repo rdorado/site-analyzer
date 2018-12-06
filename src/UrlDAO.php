@@ -40,18 +40,12 @@ class UrlDAO
      *
      */
     public static function findHitIdsByUrl($pdo, $config, $url) {
-        $resp = [];
-        try {
-            
-            $dbtable = $config->getUrlTableName();
-            $stmt = $pdo->prepare("SELECT id,url,count FROM $dbtable WHERE url = '$url'");
-            if ($stmt->execute()) {
-                while ($row = $stmt->fetch()) {
-                    $resp[] = $row['id'];
-                }
-            }
-        } catch (Exception $e) {
-            throw new Exception("Error executing function 'findHitsByUrl'. ".$e->getMessage());
+        $resp = [];            
+        $dbtable = $config->getUrlTableName();
+        $stmt = $pdo->prepare("SELECT id,url,count FROM $dbtable WHERE url = '$url'");
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $resp[] = $row['id'];
         }
         return $resp;        
     }
@@ -63,35 +57,30 @@ class UrlDAO
      */
     public static function findUrls($pdo, $config, $by = []) {
         $resp = [];
-        try {
-            $dbtable = $config->getUrlTableName();
-            $qdata = [];
-            $tquery = [];
-            if (array_key_exists('id', $by)) {
-                $qdata[] = $by['id'];
-                $tquery[] = "id = ?";
-            }
-            
-            if (array_key_exists('url', $by)) {
-                $qdata[] = $by['url'];
-                $tquery[] = "url = ?";
-            }
-            
-            $sql = "SELECT id,url,count FROM $dbtable";
-            if (count($tquery) > 0) {
-                $sql = $sql." WHERE ".join(" AND ", $tquery);
-            }
-            
-            $stmt = $pdo->prepare($sql);
-            if ($stmt->execute($qdata)) {
-                while ($row = $stmt->fetch()) {
-                    $resp[] = [$row['id'], $row['url'], $row['count']];
-                }
-            }
-            
-        } catch (Exception $e) {
-            throw new Exception("Error executing function 'getAllUrls'. ".$e->getMessage());
+        $dbtable = $config->getUrlTableName();
+        $qdata = [];
+        $tquery = [];
+        if (array_key_exists('id', $by)) {
+            $qdata[] = $by['id'];
+            $tquery[] = "id = ?";
         }
+            
+        if (array_key_exists('url', $by)) {
+            $qdata[] = $by['url'];
+            $tquery[] = "url = ?";
+        }
+            
+        $sql = "SELECT id,url,count FROM $dbtable";
+        if (count($tquery) > 0) {
+            $sql = $sql." WHERE ".join(" AND ", $tquery);
+        }
+            
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($qdata);
+        while ($row = $stmt->fetch()) {
+            $resp[] = [$row['id'], $row['url'], $row['count']];           
+        }
+         
         return $resp;
     }    
     
