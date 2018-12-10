@@ -16,7 +16,6 @@ Features
 - Report of pages per User 
 - PSR-4 compatible.
 
-
 Installation
 ------------
 
@@ -103,10 +102,5 @@ $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 
 -->
-
-
-
-
-
 
 
