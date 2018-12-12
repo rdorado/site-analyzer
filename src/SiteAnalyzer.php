@@ -149,18 +149,26 @@ class SiteAnalyzer
      */
     public static function getTransitionMatrix($options)
     { 
-           
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $pdo);
+        
+        $pairs = Matrix::slice($tests);   
     } 
 
     /*
      * @param
      */
-    public static function performABTest($tests)
+    public static function performABTest($tests, $options)
     {
-        $testCounts = Persistence::getCountsByIds(array_keys($tests));
-        $pairs = toPairs($tests);
-        $data = Persistence::getFromByIds($pairs);
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $options);
         
+        $testIds = getTestIds($tests);
+        $testCounts = Persistence::getCountsByIds($pdo, $testIds);                
+        $targetCounts = Persistence::getFromByIds($pdo, $pairs);
+        $result = Statistics::ABtest($testCounts, $targetCounts, $options);
+        
+        return $result;
     } 
     
     /*
