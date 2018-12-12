@@ -147,9 +147,9 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function getTransitionMatrix()
-    {
-
+    public static function getTransitionMatrix($options)
+    { 
+           
     } 
 
     /*
@@ -166,9 +166,14 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function findVisitProfiles($nprofiles)
+    public static function findVisitTimeProfiles($nprofiles, $options)
     {
-        //$testCounts = Persistence::getCountsByIds(array_keys($tests));
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $pdo);
+        $data = Persistence::getOptions($pdo, $options);
+        $data = Matrix::submatrix($data, [1]);
+        $clusters = ML:kmeans($data, $nprofiles);
+        return $clusters;
     }
 }
 
