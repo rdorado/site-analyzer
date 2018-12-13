@@ -147,12 +147,17 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function getTransitionMatrix($options)
+    public static function getTransitionMatrix($options = [])
     { 
         $config = SiteAnalyzer::loadConfig();
-        $pdo = SiteAnalyzer::getPDO($config, $pdo);
+        $pdo = SiteAnalyzer::getPDO($config, $options);
         
-        $pairs = Matrix::slice($tests);   
+        $targetCounts = Persistence::getFromByIds($pdo, $pairs);
+        $data = Matrix::submatrix($targetCounts, [0, 1, 2]);
+        $data = Matrix::toSquareMatrix($data, 0, 1, 2);
+        
+        $result = Matrix::power(2);        
+        return $result;
     } 
 
     /*
