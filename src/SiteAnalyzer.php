@@ -156,7 +156,7 @@ class SiteAnalyzer
         $data = Matrix::submatrix($targetCounts, [0, 1, 2]);
         $data = Matrix::toSquareMatrix($data, 0, 1, 2);
         
-        $result = Matrix::power(2);        
+        $result = Matrix::power($data, 2);        
         return $result;
     } 
 
