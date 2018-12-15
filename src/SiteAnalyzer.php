@@ -66,6 +66,17 @@ class SiteAnalyzer
     }
 
     /*
+     * @param 
+     */
+    public static function getPDO($config, $pdo)
+    {
+        if ($pdo==null) {
+            $pdo = Persistence::getPDO($config);
+        }
+        return $pdo;
+    }
+    
+    /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
     public static function getStats($pdo = null)
@@ -86,9 +97,8 @@ class SiteAnalyzer
     public static function groupHitsByTime($options, $pdo = null)
     {
         $config = SiteAnalyzer::loadConfig();
-        if ($pdo==null) {
-            $pdo = Persistence::getPDO($config);
-        }
+        $pdo = SiteAnalyzer::getPDO($config, $pdo);
+        
         $data = OptionsDAO::getHitsWithOptions($pdo, $config);
         $resp = [];
         foreach ($data as $row) {
@@ -104,10 +114,9 @@ class SiteAnalyzer
      */
     public static function groupHitsByUser($pdo = null)
     {
-        $config = new Configuration("site-analyzer.ini", isset($pdo));
-        if ($pdo==null) {
-            $pdo = Persistence::getPDO($config);
-        }
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $pdo);
+        
         $data = OptionsDAO::getHitsWithOptions($pdo, $config);        
         $count = [];
         foreach ($data as $row) {
@@ -148,11 +157,11 @@ class SiteAnalyzer
      * @param
      */
     public static function getTransitionMatrix($options)
-    { 
+    {
         $config = SiteAnalyzer::loadConfig();
-        $pdo = SiteAnalyzer::getPDO($config, $pdo);
+        $pdo = SiteAnalyzer::getPDO($config, $options);
         
-        $pairs = Matrix::slice($tests);   
+        $Persistence::getAllFrom($pdo, $config);
     } 
 
     /*
@@ -180,7 +189,7 @@ class SiteAnalyzer
         $pdo = SiteAnalyzer::getPDO($config, $pdo);
         $data = Persistence::getOptions($pdo, $options);
         $data = Matrix::submatrix($data, [1]);
-        $clusters = ML:kmeans($data, $nprofiles);
+        $clusters = ML::kmeans($data, $nprofiles);
         return $clusters;
     }
 }
