@@ -54,7 +54,6 @@ class Persistence
             $db_from_table = $config->getFromTableName();
             $db_url_table = $config->getUrlTableName();
 
-            print($db_hit_table);
             $stmt = $pdo->prepare("CREATE TABLE $db_hit_table (id VARCHAR(255), count INT)");
             $stmt->execute();
             $stmt = $pdo->prepare("CREATE TABLE $db_options_table (id VARCHAR(255), time TIMESTAMP, user VARCHAR(255))");
@@ -247,6 +246,7 @@ class Persistence
     public static function findByFrom($pdo, $config, $by = []) {
         return FromDAO::findByFrom($pdo, $config, $by);
     }
+    
 }
 
 

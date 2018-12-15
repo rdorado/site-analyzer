@@ -51,6 +51,18 @@ class SiteAnalyzer
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
+    public static function resetDatabase($options = [])
+    {
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $options);
+        
+        Persistence::deleteDatabase($pdo, $config);
+        Persistence::crateDatabase($pdo, $config);
+    }
+    
+    /*
+     * @param $format string, one of [php-array, xml, json, txt-csv]
+     */
     public static function loadConfig($pdoProvided = FALSE)
     {
         try {
@@ -68,24 +80,21 @@ class SiteAnalyzer
     /*
      * @param 
      */
-    public static function getPDO($config, $pdo)
+    public static function getPDO($config, $options)
     {
-        if ($pdo==null) {
-            $pdo = Persistence::getPDO($config);
-        }
-        return $pdo;
+        if (array_key_exists("pdo",$options)) {
+            return $options["pdo"];
+        }         
+        return  Persistence::getPDO($config);
     }
     
     /*
      * @param $format string, one of [php-array, xml, json, txt-csv]
      */
-    public static function getStats($pdo = null)
+    public static function getStats($options = [])
     {   
         $config = SiteAnalyzer::loadConfig();
-        //*$config = new Configuration("site-analyzer.ini", isset($pdo));
-        if ($pdo==null) {
-            $pdo = Persistence::getPDO($config);
-        }
+        $pdo = SiteAnalyzer::getPDO($config, $options);
         
         $data = Persistence::getCounts($pdo, $config);
         return $data;
@@ -94,10 +103,10 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function groupHitsByTime($options, $pdo = null)
+    public static function groupHitsByTime($options = [])
     {
         $config = SiteAnalyzer::loadConfig();
-        $pdo = SiteAnalyzer::getPDO($config, $pdo);
+        $pdo = SiteAnalyzer::getPDO($config, $options);
         
         $data = OptionsDAO::getHitsWithOptions($pdo, $config);
         $resp = [];
@@ -112,10 +121,10 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function groupHitsByUser($pdo = null)
+    public static function groupHitsByUser($options = [])
     {
         $config = SiteAnalyzer::loadConfig();
-        $pdo = SiteAnalyzer::getPDO($config, $pdo);
+        $pdo = SiteAnalyzer::getPDO($config, $options);
         
         $data = OptionsDAO::getHitsWithOptions($pdo, $config);        
         $count = [];
@@ -156,14 +165,53 @@ class SiteAnalyzer
     /*
      * @param
      */
-    public static function getTransitionMatrix($options)
+    public static function getTransitionMatrix($options = [])
+    { 
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $options);
+        
+        $targetCounts = Persistence::findByFrom($pdo, $config);
+        
+        $data = Matrix::submatrix($targetCounts, [1, 0, 2]);        
+        $data = Matrix::toSquareMatrix($data, 0, 1, 2);
+        $labels = Matrix::arrayToMatrix($data["labels"]);
+        $data = $data["data"];
+        $data = Matrix::toBinary($data);
+        
+        if (array_key_exists("level", $options)) {
+            $level = $options["level"];
+        }
+        else {
+            $level = count($labels) - 1;
+        }
+        
+        $result = $data;
+        for ($i=1;$i<$level;$i++) {
+            $tmp = Matrix::multiply($result, $data);
+            $result = Matrix::sum($result, $tmp);
+        }
+        
+        $result = Matrix::toBinary($result);
+        return ["labels"=>$labels, "data"=>$result];
+    } 
+
+    /*
+     * @param
+     */
+    public static function getTransitionCounts($options = [])
     {
         $config = SiteAnalyzer::loadConfig();
         $pdo = SiteAnalyzer::getPDO($config, $options);
         
-        $Persistence::getAllFrom($pdo, $config);
+        $targetCounts = Persistence::findByFrom($pdo, $config);
+        
+        $data = Matrix::submatrix($targetCounts, [1, 0, 2]);
+        $data = Matrix::toSquareMatrix($data, 0, 1, 2);
+        $labels = Matrix::arrayToMatrix($data["labels"]);
+        
+        return ["data"=>$data["data"], "labels"=>$labels];
     } 
-
+    
     /*
      * @param
      */
