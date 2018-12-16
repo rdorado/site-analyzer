@@ -129,10 +129,10 @@ class SiteAnalyzer
         $data = OptionsDAO::getHitsWithOptions($pdo, $config);        
         $count = [];
         foreach ($data as $row) {
-            if (array_key_exists($row['user'], $count)) {
-                $count[$row['user']]++;
+            if (array_key_exists($row[2], $count)) {
+                $count[$row[2]]++;
             } else {
-                $count[$row['user']] = 1;
+                $count[$row[2]] = 1;
             }            
         }
         
@@ -170,8 +170,7 @@ class SiteAnalyzer
         $config = SiteAnalyzer::loadConfig();
         $pdo = SiteAnalyzer::getPDO($config, $options);
         
-        $targetCounts = Persistence::findByFrom($pdo, $config);
-        
+        $targetCounts = Persistence::findByFrom($pdo, $config);        
         $data = Matrix::submatrix($targetCounts, [1, 0, 2]);        
         $data = Matrix::toSquareMatrix($data, 0, 1, 2);
         $labels = Matrix::arrayToMatrix($data["labels"]);
@@ -194,6 +193,39 @@ class SiteAnalyzer
         $result = Matrix::toBinary($result);
         return ["labels"=>$labels, "data"=>$result];
     } 
+    
+    /*
+     * @param
+     */
+    public static function getPathCountMatrix($options = [])
+    {
+        
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $options);
+        
+        $targetCounts = Persistence::findByFrom($pdo, $config);
+        $data = Matrix::submatrix($targetCounts, [1, 0, 2]);
+        $data = Matrix::toSquareMatrix($data, 0, 1, 2);
+        $labels = Matrix::arrayToMatrix($data["labels"]);
+        $data = $data["data"];
+        $data = Matrix::toBinary($data);
+        
+        if (array_key_exists("level", $options)) {
+            $level = $options["level"];
+        }
+        else {
+            $level = count($labels) - 1;
+        }
+        
+        $result = $data;
+        for ($i=1;$i<$level;$i++) {
+            $tmp = Matrix::multiply($result, $data);
+            $result = Matrix::sum($result, $tmp);
+        }
+        
+        return ["labels"=>$labels, "data"=>$result];
+        
+    }
 
     /*
      * @param
@@ -212,30 +244,38 @@ class SiteAnalyzer
         return ["data"=>$data["data"], "labels"=>$labels];
     } 
     
-    /*
-     * @param
-     */
-    public static function performABTest($tests, $options)
-    {
-        $config = SiteAnalyzer::loadConfig();
-        $pdo = SiteAnalyzer::getPDO($config, $options);
-        
-        $testIds = getTestIds($tests);
-        $testCounts = Persistence::getCountsByIds($pdo, $testIds);                
-        $targetCounts = Persistence::getFromByIds($pdo, $pairs);
-        $result = Statistics::ABtest($testCounts, $targetCounts, $options);
-        
-        return $result;
-    } 
+    
     
     /*
      * @param
      */
-    public static function findVisitTimeProfiles($nprofiles, $options)
+    public static function performABTest($tests, $options = [])
     {
         $config = SiteAnalyzer::loadConfig();
-        $pdo = SiteAnalyzer::getPDO($config, $pdo);
-        $data = Persistence::getOptions($pdo, $options);
+        $pdo = SiteAnalyzer::getPDO($config, $options);
+        
+        $testCounts = Persistence::getCountsFromTest($pdo, $config, $tests);  
+        $targetCounts = Persistence::getFromByTest($pdo, $config, $tests);
+        $result = Statistics::ABtest($testCounts, $targetCounts, $options);
+        
+        return $result;
+    } 
+
+    
+    
+    /*
+     * @param
+     */
+    public static function findVisitTimeProfiles($nprofiles, $options = [])
+    {
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $options);
+        $data = OptionsDAO::getHitsWithOptions($pdo, $config);
+        //var_dump($data[0]);
+        $data = Matrix::submatrix($data, [0, 1]);
+        //$data = Persistence::getOptions($pdo, $options);
+        $data = SiteAnalyzer::transform($data, "html");
+        print($data);
         $data = Matrix::submatrix($data, [1]);
         $clusters = ML::kmeans($data, $nprofiles);
         return $clusters;

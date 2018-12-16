@@ -23,9 +23,22 @@ class Statistics
     /*
      * @param
      */
-    function ABtest($testCounts, $targetCounts, $options)
+    public static function ABtest($testCounts, $targetCounts, $options)
     {
-        return [];
+        $ntotal = 0;
+        $resp  = [];
+        foreach($testCounts as $testCount) {
+            $ntotal += $testCount[1];
+        }
+        foreach($testCounts as $testCount) {
+            foreach ($targetCounts as $targetCount) {
+                if ($testCount[0] === $targetCount[1]) {
+                    $resp[] = [$testCount[0], $testCount[1], $testCount[1]/$ntotal, $targetCount[2], $targetCount[2]/$testCount[1],$targetCount[2]/$ntotal];
+                }                
+            }
+            
+        }
+        return $resp;
     }
     
 }

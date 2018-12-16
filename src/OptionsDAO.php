@@ -100,7 +100,7 @@ class OptionsDAO
         $stmt = $pdo->prepare("SELECT o.id, o.time, o.user FROM $dbOptionsTable o");
         $stmt->execute();
         while ($row = $stmt->fetch()) {
-            $resp[] = ['id'=>$row[0], 'time'=>$row[1], 'user'=>$row[2]];
+            $resp[] = [$row[0], $row[1], $row[2]];
         }
             
         return $resp;

@@ -168,7 +168,38 @@ class Persistence
         
         return true;
     }
+    
+    
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function getCountsFromTest($pdo, $config, $tests){
+        $resp = [];
+        foreach ($tests as $test) {
+            $counts = self::getCountsById($pdo, $config, $test[0]);
+            if (count($counts) > 0) $resp[] = $counts;            
+        }   
+        return $resp;
+    }
 
+    /*
+     * @param $pdo PDO
+     * @param $config Configuration
+     *
+     */
+    public static function getFromByTest($pdo, $config, $tests){
+        $resp = [];
+        foreach ($tests as $test) {
+            $counts = FromDAO::findByFromById($pdo, $config, $test[1][1], $test[1][0]);
+            foreach ($counts as $row) {
+                $resp[] = $row;
+            }
+        }
+        return $resp;
+    }
+     
     /*
      * @param $pdo PDO
      * @param $config Configuration
@@ -207,8 +238,17 @@ class Persistence
      * @param $config Configuration
      *
      */    
-    public static function getCountsById($pdo, $config) {
-        return "Works ".$pdo." ".$config;
+    public static function getCountsById($pdo, $config, $id) {
+        $resp = [];
+            
+        $dbHitTable = $config->getHitTableName();
+        $stmt = $pdo->prepare("SELECT h.id, h.count FROM $dbHitTable h WHERE h.id=?");
+        if ($stmt->execute([$id])) {
+            while ($row = $stmt->fetch()) {
+                $resp = [$row[0], $row[1]];
+            }
+        }
+        return $resp;
     }
     
     /*

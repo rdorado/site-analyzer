@@ -64,7 +64,31 @@ class FromDAO
             }
         }
     }
+
+    /*
+     * @param $pdo \PDO
+     * @param $config Configuration
+     *
+     */
+    public static function findByFromById($pdo, $config, $id, $from_id = null) {
+        $resp = [];
         
+        $dbFromtable = $config->getFromTableName();
+        $qdata = [$id];
+        $tquery = "SELECT f.* FROM $dbFromtable f WHERE f.id = ?";
+        if ($from_id != null) {
+            $tquery = $tquery." AND f.from_id = ?";
+            $qdata[] = $from_id;
+        }
+        $stmt = $pdo->prepare($tquery);
+        $stmt->execute($qdata);
+        while ($row = $stmt->fetch()) {
+            $resp[] = [$row['id'], $row['from_id'], $row['count']];
+        }
+        
+        return $resp;
+    }
+    
     /*
      * @param $pdo \PDO
      * @param $config Configuration

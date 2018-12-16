@@ -24,7 +24,7 @@ class ML
     /*
      * @param
      */
-    function kmeans($data, $nclusters)
+    function kmeans($data, $nclusters, $categorical = [])
     {
         $resp = [];
         $finished = false;

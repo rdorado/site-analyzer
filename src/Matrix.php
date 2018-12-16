@@ -8,7 +8,7 @@
  */
 namespace SiteAnalyzer;
 /**
- * class SiteAnalyzer
+ * class Matrix
  *
  * @package   SiteAnalyzer
  * @author    Ruben Dorado <ruben.dorados@gmail.com>
