@@ -24,7 +24,7 @@ class ML
     /*
      * @param
      */
-    public static function kmeans($data, $nclusters, $categorical = [])
+    public static function kmeans($data, $nclusters)
     {
         $resp = [];
         $finished = false;
@@ -57,7 +57,6 @@ class ML
             }
         
             // Check change 
- 
             $finished = true;
             if (count($resp) > 0) {
                 for ($j=0; $j < $npoints; $j++) {        
@@ -70,7 +69,7 @@ class ML
                 $finished = false;
             }
             $resp = $nresp;
-            var_dump($resp);    
+            
             // Recalculate the centroids
             $centroids = self::initCentroids($nclusters, $ndimensions, function(){return 0;});
             $counts = array_fill(0, $nclusters, 0);
