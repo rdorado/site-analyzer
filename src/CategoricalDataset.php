@@ -17,11 +17,37 @@ namespace SiteAnalyzer;
  */
 class CategoricalDataset
 {
+ 
+    /**
+     * @var list
+     */
+    protected $data;    
+    
+    /**
+     * @var list
+     */
+    protected $sortedEncodedFeatures;        
+
+    /**
+     * @var list
+     */
+    protected $encodedValues;      
+   
+    /**
+     * @var list
+     */
+    protected $featEncode;
+    
+    /**
+     * @var list
+     */
+    protected $featIndexMap;
+    
     
     /*
      * @param
      */        
-    function __construct($data) 
+    public function __construct($data) 
     {
         $this->data = $data;
     }
@@ -29,12 +55,11 @@ class CategoricalDataset
     /*
      * @param
      */    
-    function setEncodedFeatures($array) 
+    public function setEncodedFeatures($array) 
     {
         $array = sort($array);
         $this->encodedValues = [];
         $this->sortedEncodedFeatures = $array;
-        $this->newEncodedSize = count($array);
         foreach($this->sortedEncodedFeatures as $col){
             $vals = $this->getUniqueValues($col);
             $this->encodedValues[] = $vals;
@@ -52,10 +77,10 @@ class CategoricalDataset
     /*
      * @param
      */
-    function getUniqueValues($col) 
+    private function getUniqueValues($col) 
     {
         $resp = [];
-        $resp = Matrix::getColumn($data, $col);
+        $resp = Matrix::getColumn($this->data, $col);
         $resp = array_unique($resp);
         return $resp;
     }
@@ -64,7 +89,7 @@ class CategoricalDataset
     /*
      * @param
      */
-    function encodeFeature($size) 
+    private function encodeFeature($size) 
     {
         $resp = [];
         for ($i=0;$i<$size;$i++) {
@@ -78,17 +103,19 @@ class CategoricalDataset
     /*
      * @param
      */  
-    function encode(){
+    public function encode(){
         $transformer  = [];
         $ndata = [];
-        for ($j=0; $j<$ndim; $j++) {
+        $n = count($this->data);
+        $ndim = count($this->data[0]);
+        for ($j=0; $j<$d; $j++) {
             $transformer[] = function($val){ return [$val]; };
         }
         foreach($this->sortedEncodedFeatures as $col) {
             $transformer[$col] = function($val) { return $this->featEncode[$col][$val]; };
         }
         $ndata = [];
-        for ($i=0; $i<$npoints; $i++) {
+        for ($i=0; $i<$n; $i++) {
             $npoint = [];
             for ($j=0; $j<$ndim; $j++) {
                 $npoint += $transformer[$j]($data[$i][$j]);
