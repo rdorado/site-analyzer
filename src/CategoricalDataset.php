@@ -17,7 +17,14 @@ namespace SiteAnalyzer;
  */
 class CategoricalDataset
 {
-
+    
+    /*
+     * @param
+     */        
+    function __construct($data) {
+        $this->data = $data;
+    }
+    
     /*
      * @param
      */    
@@ -25,18 +32,21 @@ class CategoricalDataset
         $array = sort($array);
         $this->encodedValues = [];
         $this->sortedEncodedFeatures = $array;
-        foreach($this->sortedEncodedFeatures as $feat){
-            $vals = getUniqueValues($this->sortedEncodedFeatures, $feat);
+        foreach($this->sortedEncodedFeatures as $col){
+            $vals = $this->getUniqueValues($col);
             $this->encodedValues[] = $vals;
-            $this->encodedFeatMapSize[$feat] = count($vals);
+            $this->encodedFeatMapSize[$col] = count($vals);
         }
     }   
     
     /*
      * @param
      */
-    function getUniqueValues($feat){
-        
+    function getUniqueValues($col){
+        $resp = [];
+        $resp = Matrix::getColumn($data, $col);
+        $resp = array_unique($resp);
+        return $resp;
     }
     
     /*
