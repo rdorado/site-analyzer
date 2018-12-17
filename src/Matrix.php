@@ -80,6 +80,19 @@ class Matrix
     /*
      * @param
      */
+    public static function getColumn($matrix, $col)
+    {
+        $n = count($matrix1);
+        $resp = [];
+        foreach ($matrix as $row) {
+           $resp[] = $row[$col];
+        }
+        return $resp;
+    }
+    
+    /*
+     * @param
+     */
     public static function sum($matrix1, $matrix2)
     {
         $result = [];
