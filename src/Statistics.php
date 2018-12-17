@@ -23,7 +23,7 @@ class Statistics
     /*
      * @param
      */
-    public static function ABtest($testCounts, $targetCounts, $options)
+    public static function ABtest($testCounts, $targetCounts)
     {
         $ntotal = 0;
         $resp  = [];
