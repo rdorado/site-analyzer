@@ -1,24 +1,47 @@
-
-
-
-
+<?php
+/**
+ *
+ * (c) Ruben Dorado <ruben.dorados@google.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+namespace SiteAnalyzer;
+/**
+ * class CategoricalDataset
+ *
+ * @package   SiteAnalyzer
+ * @author    Ruben Dorado <ruben.dorados@gmail.com>
+ * @copyright 2018 Ruben Dorado
+ * @license   http://www.opensource.org/licenses/MIT The MIT License
+ */
 class CategoricalDataset
 {
-    init($data){
-    
-    }
-    
+
+    /*
+     * @param
+     */    
     function setEncodedFeatures($array){
         $array = sort($array);
         $this->encodedValues = [];
         $this->sortedEncodedFeatures = $array;
-        for($feat in $this->sortedEncodedFeatures){
+        foreach($this->sortedEncodedFeatures as $feat){
             $vals = getUniqueValues($this->sortedEncodedFeatures, $feat);
             $this->encodedValues[] = $vals;
             $this->encodedFeatMapSize[$feat] = count($vals);
         }
     }   
     
+    /*
+     * @param
+     */
+    function getUniqueValues($feat){
+        
+    }
+    
+    /*
+     * @param
+     */  
     function encode(){
         $transformer  = [];
         $ndata = [];
@@ -39,6 +62,9 @@ class CategoricalDataset
         $return $ndata;
     }
     
+    /*
+     * @param
+     */  
     function decode($ndata){
         $resp = [];
         for ($i=0; $i<$npoints; $i++) {

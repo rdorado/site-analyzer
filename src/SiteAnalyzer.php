@@ -111,8 +111,8 @@ class SiteAnalyzer
         $data = OptionsDAO::getHitsWithOptions($pdo, $config);
         $resp = [];
         foreach ($data as $row) {
-            $tmp = [$row['id']];
-            $tmp = array_merge($tmp, getdate($row['time']));
+            $tmp = [$row[0]];
+            $tmp = array_merge($tmp, getdate($row[1]));
             $resp[] = $tmp;
         }        
         return $resp;        
@@ -270,15 +270,23 @@ class SiteAnalyzer
     {
         $config = SiteAnalyzer::loadConfig();
         $pdo = SiteAnalyzer::getPDO($config, $options);
-        $data = OptionsDAO::getHitsWithOptions($pdo, $config);
-        //var_dump($data[0]);
-        $data = Matrix::submatrix($data, [0, 1]);
-        //$data = Persistence::getOptions($pdo, $options);
-        $data = SiteAnalyzer::transform($data, "html");
-        print($data);
-        $data = Matrix::submatrix($data, [1]);
-        $clusters = ML::kmeans($data, $nprofiles);
-        return $clusters;
+        $table = OptionsDAO::getHitsWithOptions($pdo, $config);
+        
+        
+        $data = [];
+        foreach ($table as $row) {
+            $tmp = getdate($row[1]);
+            $data[] = [$tmp['weekday'], $tmp['hours']];
+        }
+        
+        $cdata = new CategoricalDataset($data);
+        $cdata.setEncodedFeatures([0, 1]);
+        $tdata = $cdata.encode();
+        /*$clusters = ML::kmeans($tdata, $nprofiles);*/
+        
+        
+        //$clusters = ML::kmeans($data, $nprofiles);
+        return $tdata;
     }
 }
 

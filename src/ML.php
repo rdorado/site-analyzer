@@ -24,58 +24,88 @@ class ML
     /*
      * @param
      */
-    function kmeans($data, $nclusters, $categorical = [])
+    public static function kmeans($data, $nclusters, $categorical = [])
     {
         $resp = [];
         $finished = false;
+        $niter = 0;
+        $maxiter = 100;
         $npoints = count($data);
-        if (count($npoints) <= 0) throw new Exception("Not enough data. ");    
-        $ndimensions = count($npoints[0]);
-        $centroids = initCentroids($nclusters, $ndimensions, function(){return rand(0,100)/100;});   
-        while (!$finished) {
-    
-            // Assign each one of the points to one centroid        
+        if ($npoints <= 0) throw new \Exception("Not enough data. ");    
+        $ndimensions = count($data[0]);
+        $centroids = [];
+        for ($i=0;$i<$nclusters;$i++){
+            $centroids[] = $data[$i];
+        }
+        //$centroids = self::initCentroids($nclusters, $ndimensions, function(){return rand(0,100)/100;});   
+        while (!$finished && $niter < $maxiter) {
+            // Assign each one of the points to one centroid   
+            $niter++;
             $nresp = [];
             for ($j = 0; $j < $npoints; $j++) {        
                 $best = -1;
                 $bdist = INF;
                 for ($i = 0; $i < $nclusters; $i++) {
-                    $ndist = eclideanDistance($npoints[$j], $nclusters[$i]);
+                    $ndist = self::eclideanDistance($data[$j], $centroids[$i]);
                     if($bdist > $ndist) {
                         $bdist = $ndist;
                         $best = $i;
                     }            
                 }
                 $nresp[] = $best;
+                
             }
         
             // Check change 
-            if(count($resp)!=0) {
-                $finished = true;
-                for ($j = 0; $j < $npoints; $j++) {        
-                    if($resp[$j]!==$nresp[$j]){
+ 
+            $finished = true;
+            if (count($resp) > 0) {
+                for ($j=0; $j < $npoints; $j++) {        
+                    if ($resp[$j]!==$nresp[$j]) {
                         $finished = false;
                         break;
                     }
                 }
-                $resp = $nresp;
+            } else {
+                $finished = false;
             }
-                
-            /** Recalculate the centroids*/
-            $centroids = initCentroids($nclusters, $ndimensions, function(){return 0;});
+            $resp = $nresp;
+            var_dump($resp);    
+            // Recalculate the centroids
+            $centroids = self::initCentroids($nclusters, $ndimensions, function(){return 0;});
             $counts = array_fill(0, $nclusters, 0);
-            for ($j = 0; $j < $npoints; $j++) {              
-                sumCentroid($centroids[$resp[$j]], $data[$j]);
+            for ($j = 0; $j < $npoints; $j++) {    
+                $centroids[$resp[$j]] = Matrix::sumArray($centroids[$resp[$j]], $data[$j]);
                 $counts[$resp[$j]]++;            
             }
-            normalizeCentroids($centroids, $counts);
+            $centroids = self::normalizeCentroids($centroids, $counts);
         }
+        return [$resp];
     }
 
+    
     /*
      * @param
      */
-    function initCentroids($nclusters, $ndimensions, $fvalue) 
+    public static function normalizeCentroids($centroids, $counts)
+    {
+        $resp = [];
+        $n = count($centroids);
+        $d = count($centroids[0]);
+        for ($i=0;$i<$n;$i++) {
+            $tmp = [];
+            for ($j=0;$j<$d;$j++){
+                $tmp[] = $centroids[$i][$j]/$counts[$i];
+            }
+            $resp[] = $tmp;
+        }
+        return $resp;
+    }
+    
+    /*
+     * @param
+     */
+    public static function initCentroids($nclusters, $ndimensions, $fvalue) 
     {
         $resp = [];
         for ($i = 0; $i < $nclusters; $i++) {
@@ -91,7 +121,7 @@ class ML
     /*
      * @param
      */
-    function eclideanDistance($p1, $p2) {
+    public static function eclideanDistance($p1, $p2) {
        $len = count($p1);
        $acum = 0;
        for($i=0; $i<$len; $i++) {

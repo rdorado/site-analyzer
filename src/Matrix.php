@@ -162,5 +162,17 @@ class Matrix
         }
         return $resp;
     }
+    
+    /*
+     * @param
+     */
+    public static function sumArray($array1, $array2) {
+        $resp = [];
+        $n = min([count($array1), count($array2)]);
+        for ($i=0;$i<$n;$i++){
+            $resp[] = $array1[$i] + $array2[$i];
+        }
+        return $resp;
+    }
 
 }
