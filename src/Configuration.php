@@ -200,7 +200,7 @@ final class Configuration
      */
     private static function getStringParameter($config, $section, $name)
     {    
-        return isset($config[$section][$name]) ?  $config[$section][$name] : NULL;
+        return isset($config[$section][$name]) ? $config[$section][$name] : NULL;
     }
     
     /*
