@@ -254,7 +254,7 @@ class SiteAnalyzer
         
         $testCounts = Persistence::getCountsFromTest($pdo, $config, $tests);  
         $targetCounts = Persistence::getFromByTest($pdo, $config, $tests);
-        $result = Statistics::ABtest($testCounts, $targetCounts, $options);
+        $result = Statistics::ABtest($testCounts, $targetCounts);
         
         return $result;
     } 
