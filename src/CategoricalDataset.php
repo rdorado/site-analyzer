@@ -34,12 +34,19 @@ class CategoricalDataset
         $array = sort($array);
         $this->encodedValues = [];
         $this->sortedEncodedFeatures = $array;
+        $this->newEncodedSize = count($array);
         foreach($this->sortedEncodedFeatures as $col){
             $vals = $this->getUniqueValues($col);
             $this->encodedValues[] = $vals;
-            $this->encodedFeatMapSize[$col] = count($vals);
+            $this->featIndexMap[$col] = count($vals);
             $this->featEncode[$col] = $this->encodeFeature(count($vals));
+            //$this->featDecode[$col] = function($val, $arr){ return $this->getDecodedFeature($val, $arr, ); }
+            //$this->newEncodedSize += count($vals)-1;
         }
+        
+        /*for ($i=0;$i<$this->newEncodedSize:$i++) {
+            
+        }*/
     }   
     
     /*
@@ -93,19 +100,25 @@ class CategoricalDataset
     
     /*
      * @param
-     */  
+     *
     function decode($ndata){
         $resp = [];
-        for ($i=0; $i<$npoints; $i++) {
-            //$point = array_fill(0, $nexpdim; null);
-            $point = array($ndata[$i]);
-            foreach ( as $key => $val) {
-                $this->featDecode[$key]($point);            
-            }
-            $point = $this->removeNulls($point);
-            $resp[] = $point;
+        foreach ($ndata as $row) {             
+            $resp[] = $this->decodeRow($row);
         }
         return $resp;
     }
+
+    /*
+     * @param
+     *     
+    function decodeRow($row){
+        $resp = [];
+        $n = count($row);
+        for ($i=0; $i<$n; $i++) {
+            $resp[] = $this->decodeFeature($i, $row);
+        }
+        return $resp;
+    }*/
     
 }
