@@ -280,8 +280,8 @@ class SiteAnalyzer
         }
         
         $cdata = new CategoricalDataset($data);
-        $cdata.setEncodedFeatures([0, 1]);
-        $tdata = $cdata.encode();
+        $cdata->setEncodedFeatures([0, 1]);
+        $tdata = $cdata->encode();
         /*$clusters = ML::kmeans($tdata, $nprofiles);*/
         
         
