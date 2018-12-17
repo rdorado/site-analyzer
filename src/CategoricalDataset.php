@@ -57,7 +57,7 @@ class CategoricalDataset
      */    
     public function setEncodedFeatures($array) 
     {
-        $array = sort($array);
+        sort($array);
         $this->encodedValues = [];
         $this->sortedEncodedFeatures = $array;
         foreach($this->sortedEncodedFeatures as $col){
