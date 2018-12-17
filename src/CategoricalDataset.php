@@ -21,14 +21,16 @@ class CategoricalDataset
     /*
      * @param
      */        
-    function __construct($data) {
+    function __construct($data) 
+    {
         $this->data = $data;
     }
     
     /*
      * @param
      */    
-    function setEncodedFeatures($array){
+    function setEncodedFeatures($array) 
+    {
         $array = sort($array);
         $this->encodedValues = [];
         $this->sortedEncodedFeatures = $array;
@@ -36,16 +38,33 @@ class CategoricalDataset
             $vals = $this->getUniqueValues($col);
             $this->encodedValues[] = $vals;
             $this->encodedFeatMapSize[$col] = count($vals);
+            $this->featEncode[$col] = $this->encodeFeature(count($vals));
         }
     }   
     
     /*
      * @param
      */
-    function getUniqueValues($col){
+    function getUniqueValues($col) 
+    {
         $resp = [];
         $resp = Matrix::getColumn($data, $col);
         $resp = array_unique($resp);
+        return $resp;
+    }
+    
+    
+    /*
+     * @param
+     */
+    function encodeFeature($size) 
+    {
+        $resp = [];
+        for ($i=0;$i<$size;$i++) {
+            $tmp = array_fill(0, $size, 0);
+            $tmp[$i] = 1;  
+            $resp[] = $tmp;
+        }
         return $resp;
     }
     
@@ -56,20 +75,20 @@ class CategoricalDataset
         $transformer  = [];
         $ndata = [];
         for ($j=0; $j<$ndim; $j++) {
-            $transformer[] = function($val){ return $val; };
+            $transformer[] = function($val){ return [$val]; };
         }
-        foreach( as $key => $val) {
-            $transformer[$key] = function($val) { return $this->featEncode[$key][$val]; };
+        foreach($this->sortedEncodedFeatures as $col) {
+            $transformer[$col] = function($val) { return $this->featEncode[$col][$val]; };
         }
         $ndata = [];
         for ($i=0; $i<$npoints; $i++) {
             $npoint = [];
             for ($j=0; $j<$ndim; $j++) {
-                $npoint[] = $transformer[$j]($data[$i][$j]);
+                $npoint += $transformer[$j]($data[$i][$j]);
             }
             $ndata[] = $npoint;
         }
-        $return $ndata;
+        return $ndata;
     }
     
     /*
