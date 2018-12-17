@@ -43,7 +43,6 @@ class CategoricalDataset
      */
     protected $featIndexMap;
     
-    
     /*
      * @param
      */        
@@ -79,12 +78,10 @@ class CategoricalDataset
      */
     private function getUniqueValues($col) 
     {
-        $resp = [];
         $resp = Matrix::getColumn($this->data, $col);
         $resp = array_unique($resp);
         return $resp;
     }
-    
     
     /*
      * @param
@@ -111,13 +108,13 @@ class CategoricalDataset
             $transformer[] = function($val){ return [$val]; };
         }
         foreach($this->sortedEncodedFeatures as $col) {
-            $transformer[$col] = function($val) { return $this->featEncode[$col][$val]; };
+            $transformer[$col] = function($val, $col = $col) { return $this->featEncode[$col][$val]; };
         }
         $ndata = [];
         for ($i=0; $i<$n; $i++) {
             $npoint = [];
             for ($j=0; $j<$ndim; $j++) {
-                $npoint += $transformer[$j]($data[$i][$j]);
+                $npoint += $transformer[$j]($this->data[$i][$j]);
             }
             $ndata[] = $npoint;
         }
