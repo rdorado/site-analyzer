@@ -82,7 +82,6 @@ class Matrix
      */
     public static function getColumn($matrix, $col)
     {
-        $n = count($matrix1);
         $resp = [];
         foreach ($matrix as $row) {
            $resp[] = $row[$col];
