@@ -19,27 +19,27 @@ class CategoricalDataset
 {
  
     /**
-     * @var list
+     * @var array
      */
     protected $data;    
     
     /**
-     * @var list
+     * @var array
      */
     protected $sortedEncodedFeatures;        
 
     /**
-     * @var list
+     * @var array
      */
     protected $encodedValues;      
    
     /**
-     * @var list
+     * @var array
      */
     protected $featEncode;
     
     /**
-     * @var list
+     * @var array
      */
     protected $featIndexMap;
     
@@ -105,10 +105,9 @@ class CategoricalDataset
      */  
     public function encode(){
         $transformer  = [];
-        $ndata = [];
         $n = count($this->data);
         $ndim = count($this->data[0]);
-        for ($j=0; $j<$d; $j++) {
+        for ($j=0; $j<$ndim; $j++) {
             $transformer[] = function($val){ return [$val]; };
         }
         foreach($this->sortedEncodedFeatures as $col) {
