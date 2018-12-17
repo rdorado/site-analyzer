@@ -108,7 +108,7 @@ class CategoricalDataset
             $transformer[] = function($val){ return [$val]; };
         }
         foreach($this->sortedEncodedFeatures as $col) {
-            $transformer[$col] = function($val, $col = $col) { return $this->featEncode[$col][$val]; };
+            $transformer[$col] = function ($val) use ($col) { return $this->featEncode[$col][$val]; };
         }
         $ndata = [];
         for ($i=0; $i<$n; $i++) {
