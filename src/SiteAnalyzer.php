@@ -244,8 +244,6 @@ class SiteAnalyzer
         return ["data"=>$data["data"], "labels"=>$labels];
     } 
     
-    
-    
     /*
      * @param
      */
@@ -261,8 +259,6 @@ class SiteAnalyzer
         return $result;
     } 
 
-    
-    
     /*
      * @param
      */
@@ -282,11 +278,9 @@ class SiteAnalyzer
         $cdata = new CategoricalDataset($data);
         $cdata->setEncodedFeatures([0, 1]);
         $tdata = $cdata->encode();
-        /*$clusters = ML::kmeans($tdata, $nprofiles);*/
+        $clusters = ML::kmeans($tdata, $nprofiles);        
         
-        
-        //$clusters = ML::kmeans($data, $nprofiles);
-        return $tdata;
+        return [$clusters];
     }
 }
 
