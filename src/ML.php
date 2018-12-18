@@ -37,6 +37,7 @@ class ML
         for ($i=0;$i<$nclusters;$i++){
             $centroids[] = $data[$i];
         }
+        print( SiteAnalyzer::transform($centroids, "html") );
         //$centroids = self::initCentroids($nclusters, $ndimensions, function(){return rand(0,100)/100;});   
         while (!$finished && $niter < $maxiter) {
             // Assign each one of the points to one centroid   
@@ -55,7 +56,7 @@ class ML
                 $nresp[] = $best;
                 
             }
-        
+            print(SiteAnalyzer::transform([$nresp], "html"));
             // Check change 
             $finished = true;
             if (count($resp) > 0) {
@@ -69,7 +70,6 @@ class ML
                 $finished = false;
             }
             $resp = $nresp;
-            
             // Recalculate the centroids
             $centroids = self::initCentroids($nclusters, $ndimensions, function(){return 0;});
             $counts = array_fill(0, $nclusters, 0);
@@ -88,6 +88,7 @@ class ML
      */
     public static function normalizeCentroids($centroids, $counts)
     {
+        var_dump($counts);
         $resp = [];
         $n = count($centroids);
         $d = count($centroids[0]);

@@ -275,9 +275,11 @@ class SiteAnalyzer
             $data[] = [$tmp['weekday'], $tmp['hours']];
         }
         
+        
         $cdata = new CategoricalDataset($data);
         $cdata->setEncodedFeatures([0, 1]);
         $tdata = $cdata->encode();
+        print( SiteAnalyzer::transform($tdata, "html") );
         $clusters = ML::kmeans($tdata, $nprofiles);        
         
         return [$clusters];

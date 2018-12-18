@@ -63,7 +63,7 @@ class CategoricalDataset
             $vals = $this->getUniqueValues($col);
             $this->encodedValues[] = $vals;
             $this->featIndexMap[$col] = count($vals);
-            $this->featEncode[$col] = $this->encodeFeature(count($vals));
+            $this->featEncode[$col] = $this->encodeFeature($vals);
             //$this->featDecode[$col] = function($val, $arr){ return $this->getDecodedFeature($val, $arr, ); }
             //$this->newEncodedSize += count($vals)-1;
         }
@@ -78,7 +78,14 @@ class CategoricalDataset
      */
     private function getUniqueValues($col) 
     {
-        $resp = Matrix::getColumn($this->data, $col);
+        $tmp = Matrix::getColumn($this->data, $col);
+        $n = count($tmp);
+        $resp = [];
+        for ($i=0; $i<$n; $i++) {
+            if (!in_array($tmp[$i], $resp)) {
+                $resp[] = $tmp[$i];
+            }
+        }
         $resp = array_unique($resp);
         return $resp;
     }
@@ -86,13 +93,14 @@ class CategoricalDataset
     /*
      * @param
      */
-    private function encodeFeature($size) 
+    private function encodeFeature($array) 
     {
+        $size = count($array);
         $resp = [];
         for ($i=0;$i<$size;$i++) {
             $tmp = array_fill(0, $size, 0);
             $tmp[$i] = 1;  
-            $resp[] = $tmp;
+            $resp[$array[$i]] = $tmp;
         }
         return $resp;
     }
@@ -110,12 +118,13 @@ class CategoricalDataset
         foreach($this->sortedEncodedFeatures as $col) {
             $transformer[$col] = function ($val) use ($col) { return $this->featEncode[$col][$val]; };
         }
+        
         $ndata = [];
         for ($i=0; $i<$n; $i++) {
             $npoint = [];
             for ($j=0; $j<$ndim; $j++) {
-                $npoint += $transformer[$j]($this->data[$i][$j]);
-            }
+                $npoint = array_merge($npoint,$transformer[$j]($this->data[$i][$j]));
+            }            
             $ndata[] = $npoint;
         }
         return $ndata;
