@@ -33,12 +33,8 @@ class ML
         $npoints = count($data);
         if ($npoints <= 0) throw new \Exception("Not enough data. ");    
         $ndimensions = count($data[0]);
-        $centroids = [];
-        for ($i=0;$i<$nclusters;$i++){
-            $centroids[] = $data[$i];
-        }
-        print( SiteAnalyzer::transform($centroids, "html") );
-        //$centroids = self::initCentroids($nclusters, $ndimensions, function(){return rand(0,100)/100;});   
+        $centroids = self::select_disjoint($data, $nclusters);
+        
         while (!$finished && $niter < $maxiter) {
             // Assign each one of the points to one centroid   
             $niter++;
@@ -56,7 +52,7 @@ class ML
                 $nresp[] = $best;
                 
             }
-            print(SiteAnalyzer::transform([$nresp], "html"));
+            
             // Check change 
             $finished = true;
             if (count($resp) > 0) {
@@ -79,16 +75,56 @@ class ML
             }
             $centroids = self::normalizeCentroids($centroids, $counts);
         }
-        return [$resp];
+        return $resp;
     }
 
     
     /*
      * @param
      */
-    public static function normalizeCentroids($centroids, $counts)
+    private static function select_disjoint($data, $n)
     {
-        var_dump($counts);
+        $resp = [];
+        foreach ($data as $row) {
+            if ( !self::contains_point($resp, $row) ) {
+                $resp[] = $row;
+            }
+            if (count($resp) == $n) {
+                return $resp;
+            }
+        }
+        throw new \Exception("Not enough unique points.");
+    }
+    
+    /*
+     * @param
+     */
+    private static function contains_point($matrix, $array) 
+    {
+        foreach ($matrix as $row){
+            if (self::isEqual($row, $array)) return true;
+        }
+        return false;
+    }
+    
+    /*
+     * @param
+     */
+    private static function isEqual($array1, $array2)
+    {
+        $len = count($array1);
+        if($len != count($array2) ) return false;
+        for ($i=0; $i<$len; $i++) {
+            if ($array1[$i] != $array2[$i]) return false;
+        }
+        return true;
+    }
+    
+    /*
+     * @param
+     */
+    private static function normalizeCentroids($centroids, $counts)
+    {
         $resp = [];
         $n = count($centroids);
         $d = count($centroids[0]);
