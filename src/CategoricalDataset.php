@@ -61,7 +61,7 @@ class CategoricalDataset
         $this->sortedEncodedFeatures = $array;
         foreach($this->sortedEncodedFeatures as $col){
             $vals = $this->getUniqueValues($col);
-            $this->encodedValues[] = $vals;
+            $this->encodedValues[$col] = $vals;
             $this->featIndexMap[$col] = count($vals);
             $this->featEncode[$col] = $this->encodeFeature($vals);
             //$this->featDecode[$col] = function($val, $arr){ return $this->getDecodedFeature($val, $arr, ); }

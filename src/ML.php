@@ -75,7 +75,7 @@ class ML
             }
             $centroids = self::normalizeCentroids($centroids, $counts);
         }
-        return $resp;
+        return ["clusters"=>$resp, "centroids"=>$centroids];
     }
 
     

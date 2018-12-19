@@ -280,9 +280,12 @@ class SiteAnalyzer
         $cdata->setEncodedFeatures([0, 1]);
         $tdata = $cdata->encode();
         //print( SiteAnalyzer::transform($tdata, "html") );
-        $clusters = ML::kmeans($tdata, $nprofiles);        
-        
-        return [$clusters];
+        $kmResult = ML::kmeans($tdata, $nprofiles);        
+        $resp = [];
+        $resp["clusters"] = $resp["clusters"];
+        $resp["centroids"] = $resp["centroids"];
+        $resp["labels"] = $cdata->getLabelsAsArray();
+        return $resp;
     }
 }
 
