@@ -123,13 +123,30 @@ class CategoricalDataset
         for ($i=0; $i<$n; $i++) {
             $npoint = [];
             for ($j=0; $j<$ndim; $j++) {
-                $npoint = array_merge($npoint,$transformer[$j]($this->data[$i][$j]));
+                $npoint = array_merge($npoint, $transformer[$j]($this->data[$i][$j]));
             }            
             $ndata[] = $npoint;
         }
         return $ndata;
     }
-    
+ 
+    /*
+     * @param
+     */
+    function getLabelsAsArray()
+    {
+        $resp = [];
+        $len = count($data[0]);
+        for ($i=0; $i<$len; $i++) {
+            if (isset($this->encodedValues[$i])) {
+                $resp = array_merge($resp, $this->encodedValues[$i]);
+            } else {
+                $resp[] = "";
+            }
+        }
+        return $resp;
+    }
+ 
     /*
      * @param
      *
