@@ -282,8 +282,8 @@ class SiteAnalyzer
         //print( SiteAnalyzer::transform($tdata, "html") );
         $kmResult = ML::kmeans($tdata, $nprofiles);        
         $resp = [];
-        $resp["clusters"] = $resp["clusters"];
-        $resp["centroids"] = $resp["centroids"];
+        $resp["clusters"] = $kmResult["clusters"];
+        $resp["centroids"] = $kmResult["centroids"];
         $resp["labels"] = $cdata->getLabelsAsArray();
         return $resp;
     }

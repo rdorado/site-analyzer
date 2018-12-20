@@ -136,7 +136,7 @@ class CategoricalDataset
     function getLabelsAsArray()
     {
         $resp = [];
-        $len = count($data[0]);
+        $len = count($this->data[0]);
         for ($i=0; $i<$len; $i++) {
             if (isset($this->encodedValues[$i])) {
                 $resp = array_merge($resp, $this->encodedValues[$i]);
