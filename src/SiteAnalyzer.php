@@ -66,14 +66,14 @@ class SiteAnalyzer
     public static function loadConfig($pdoProvided = FALSE)
     {
         try {
-            $config = new Configuration("../../../../site-analyzer.ini", $pdoProvided);
+            $config = new Configuration(get_cfg_var("site_analyzer_config"), $pdoProvided);
         } catch (Exception $e) {
             try {
-                $config = new Configuration("site-analyzer.ini", $pdoProvided); 
+                $config = new Configuration("site-analyzer.ini", $pdoProvided);
             } catch (Exception $e) {
-                throw new Exception("Config file not found.");
+                throw new Exception("Configuration file not found. Provide a configuration file in the following directory: ".getcwd()." or configure it on the php.ini file by setting the variable 'site_analyzer_config = filename'");
             }
-        }        
+        }
         return $config;
     }
 
@@ -279,7 +279,6 @@ class SiteAnalyzer
         $cdata = new CategoricalDataset($data);
         $cdata->setEncodedFeatures([0, 1]);
         $tdata = $cdata->encode();
-        //print( SiteAnalyzer::transform($tdata, "html") );
         $kmResult = ML::kmeans($tdata, $nprofiles);        
         $resp = [];
         $resp["clusters"] = $kmResult["clusters"];
@@ -287,5 +286,33 @@ class SiteAnalyzer
         $resp["labels"] = $cdata->getLabelsAsArray();
         return $resp;
     }
+
+    /*
+     * @param
+     */
+    public static function findUserProfiles($nprofiles, $options = [])
+    {
+        $config = SiteAnalyzer::loadConfig();
+        $pdo = SiteAnalyzer::getPDO($config, $options);
+        $table = OptionsDAO::getHitsWithOptions($pdo, $config);
+                
+        $data = [];
+        foreach ($table as $row) {
+            $tmp = getdate($row[1]);
+            $data[] = [$row[2], $tmp['weekday'], $tmp['hours']];
+        }
+        
+        
+        $cdata = new CategoricalDataset($data);
+        $cdata->setEncodedFeatures([0, 1, 2]);
+        $tdata = $cdata->encode();
+        $kmResult = ML::kmeans($tdata, $nprofiles);        
+        $resp = [];
+        $resp["clusters"] = $kmResult["clusters"];
+        $resp["centroids"] = $kmResult["centroids"];
+        $resp["labels"] = $cdata->getLabelsAsArray();
+        return $resp;
+    }
+
 }
 
