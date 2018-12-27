@@ -26,6 +26,7 @@ You can install SiteAnalyzer through [Composer](https://getcomposer.org):
 $ composer require rdorado/site-analyzer
 ```
 
+
 Or modify your composer.json requirements:
 
 ```json
