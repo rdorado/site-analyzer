@@ -71,6 +71,9 @@ $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 ``` 
 
+Main features
+===========================================
+
 <!---
 ## Other features:
 
