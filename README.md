@@ -9,7 +9,6 @@ Site Analyzer
 
 
 
-
 SiteAnalyzer is a package created to perform analysis of sites developed in PHP. SiteAnalyzer can be installed into any PHP site that fits the requirements in minutes. SiteAnalyzer makes use of machine learning algorithms and statistics to create powerful reports and analysis. 
 
 Features
