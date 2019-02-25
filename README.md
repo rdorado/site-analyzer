@@ -13,14 +13,15 @@ SiteAnalyzer is a package to analyze PHP sites. With SiteAnalyzer, it is possibl
 Features
 --------
 
-- Page counter/analysis
-- Report of pages per User 
-- PSR-4 compatible.
+- Click counter
+- User profile analysis
+- A/B testing
+- Site dynamics analysis
 
 Installation
 ------------
 
-You can install SiteAnalyzer through [Composer](https://getcomposer.org):
+SiteAnalyzer can be installed through [Composer](https://getcomposer.org):
 
 ```shell
 $ composer require rdorado/site-analyzer
@@ -34,7 +35,7 @@ Or modify your composer.json requirements:
         "rdorado/site-analyzer": "^0.0.1"
     }
 ```
-and then update your project:
+and update your project:
 
 ```shell
 $ composer update
