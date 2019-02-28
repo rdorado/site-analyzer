@@ -75,6 +75,7 @@ Main features
 <!---
 ## Other features:
 
+
 ### Example 2: time analysis
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
