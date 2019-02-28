@@ -7,7 +7,6 @@ Site Analyzer
 [![Code Coverage](https://scrutinizer-ci.com/g/cocur/slugify/badges/coverage.png?b=master&style=flat-square)](https://scrutinizer-ci.com/g/cocur/slugify/?branch=master)
 -->
 
-
 SiteAnalyzer is a package to analyze PHP sites. With SiteAnalyzer, it is possible to count pages, understand user behavior, analyze site dynamic, and perform A/B testings. SiteAnalyzer can be installed into any PHP in seconds without affecting the bussiness logic of the application and customized according to the needs. SiteAnalyzer makes use of machine learning algorithms and statistics to create powerful reports and analysis. 
 
 Features
