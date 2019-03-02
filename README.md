@@ -59,6 +59,7 @@ $options = ['id' = $myid];
 SiteAnalyzer::count($options);
 ```
 
+
 Reporting/Displaying the stored information
 ===========================================
 
