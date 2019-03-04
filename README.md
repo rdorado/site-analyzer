@@ -73,6 +73,13 @@ print( SiteAnalyzer::transform($data, "html") );
 Main features
 ===========================================
 
+
+## Click counter
+## User profile analysis
+## A/B testing
+## Site dynamics analysis
+
+
 <!---
 ## Other features:
 
