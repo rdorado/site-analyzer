@@ -3,7 +3,7 @@ Site Analyzer
 
 [![MIT License](https://badgen.net/badge/license/MIT/)](http://opensource.org/licenses/MIT)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/rdorado/site-analyzer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rdorado/site-analyzer/)
-[![travis-ci](https://travis-ci.com/rdorado/site-analyzer.svg?branch=master)](https://travis-ci.com/rdorado/site-analyzer)
+[![Build Status](https://travis-ci.com/rdorado/site-analyzer.svg?branch=master)](https://travis-ci.com/rdorado/site-analyzer)
 
 
 SiteAnalyzer is a package to analyze PHP sites. With SiteAnalyzer, it is possible to count pages, understand user behavior, analyze site dynamic, and perform A/B testings. SiteAnalyzer can be installed into any PHP in seconds without affecting the bussiness logic of the application and customized according to the needs. SiteAnalyzer makes use of machine learning algorithms and statistics to create powerful reports and analysis. 
