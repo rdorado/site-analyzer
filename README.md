@@ -3,6 +3,7 @@ Site Analyzer
 
 [![MIT License](https://badgen.net/badge/license/MIT/)](http://opensource.org/licenses/MIT)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/rdorado/site-analyzer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rdorado/site-analyzer/)
+[![Build Status](https://travis-ci.com/rdorado/site-analyzer.svg?branch=master)](https://travis-ci.com/rdorado/site-analyzer)
 <!--
 [![Code Coverage](https://scrutinizer-ci.com/g/cocur/slugify/badges/coverage.png?b=master&style=flat-square)](https://scrutinizer-ci.com/g/cocur/slugify/?branch=master)
 -->
