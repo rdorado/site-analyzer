@@ -1,10 +1,6 @@
+************
 SiteAnalyzer
-=============
-
-[![MIT License](https://badgen.net/badge/license/MIT/)](http://opensource.org/licenses/MIT)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/rdorado/site-analyzer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rdorado/site-analyzer/)
-[![Build Status](https://travis-ci.com/rdorado/site-analyzer.svg?branch=master)](https://travis-ci.com/rdorado/site-analyzer)
-
+************
 
 SiteAnalyzer is a package to analyze PHP sites. With this package, it is possible to count pages, understand user behavior, analyze the interaction of the site, and perform A/B testings. SiteAnalyzer can be installed into any PHP in seconds without affecting the business logic of the application and customized according to the needs. SiteAnalyzer makes use of machine learning algorithms and statistics to analyze a site and create meaningful reports. 
 
@@ -73,7 +69,8 @@ print( SiteAnalyzer::transform($data, "html") );
 Main features
 ===========================================
 
-## Counting
+Counting
+**********************
 
 The core functionality of SiteAnalyzer is to store counts. Every time the static method ```SiteAnalyzer::count();``` is called it stores the url associated 
 
@@ -89,8 +86,12 @@ SiteAnalyzer::count();
 
 
 
-## Other features:
+Other features:
+**********************
 
+
+Examples
+===========================================
 
 ### Example 2: time analysis
 $data = SiteAnalyzer::getStats();
