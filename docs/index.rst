@@ -86,44 +86,6 @@ SiteAnalyzer::count();
 
 
 
-Other features:
-**********************
 
-
-Examples
-===========================================
-
-### Example 2: time analysis
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-### Example 3: user analysis
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-
-### Path Analytics
-
-###  Example 4: math matrix
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-### Example 5: a/b test</h2>");
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-### Profile Analyisis
-### Example 6: User profile
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-### Example 7: User-Time profile
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-### Page profiling
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-
-
+:ref:`examples`
 
