@@ -80,12 +80,6 @@ use SiteAnalyzer\SiteAnalyzer;
 SiteAnalyzer::count();
 ```
 
-## User profile analysis
-## A/B testing
-## Site dynamics analysis
 
 
-
-
-:ref:`examples`
 
