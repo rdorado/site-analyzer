@@ -68,8 +68,17 @@ $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 ``` 
 
-Main features
+Documentation
 ===========================================
+
+Read the docs at https://site-analyzer.readthedocs.io/en/latest/.
+
+
+<!---
+-  `Quickstart <https://wikipedia.readthedocs.org/en/latest/quickstart.html>`__
+-  `Full API <https://wikipedia.readthedocs.org/en/latest/code.html>`__
+
+
 
 
 ## Click counter
@@ -78,7 +87,7 @@ Main features
 ## Site dynamics analysis
 
 
-<!---
+
 ## Other features:
 
 
