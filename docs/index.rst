@@ -1,3 +1,6 @@
+.. toctree::
+  examples
+
 =============
 SiteAnalyzer
 =============
