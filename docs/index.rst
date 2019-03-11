@@ -2,6 +2,7 @@
    :maxdepth: 2
    
    intro
+   examples
 
 =============
 SiteAnalyzer
