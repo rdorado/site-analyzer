@@ -5,39 +5,33 @@ Examples
 
 Example 1: time analysis
 ============================
+$data = SiteAnalyzer::getStats();
+print( SiteAnalyzer::transform($data, "html") );
 
-Example 2: time analysis
+Example 2: user analysis
 ============================
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 
-Example 3: user analysis
+Example 3: path analytics
 ============================
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 
-
-
-
-Example 4: path analytics
-============================
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-Example 5: a/b test
+Example 4: a/b test
 ============================
 
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 
 
-Example 6: Profile Analyisis
+Example 5: Profile Analyisis
 ============================
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 
 
-Example 7: User-Time profile
+Example 6: User-Time profile
 ============================
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
