@@ -1,4 +1,4 @@
-.. highlight:: html
+.. highlight:: php
 
 ********************
 Examples
