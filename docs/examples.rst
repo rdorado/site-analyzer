@@ -1,4 +1,3 @@
-.. highlight:: php
 
 ********************
 Examples
@@ -7,7 +6,8 @@ Examples
 Example 1: time analysis
 ============================
 
-::
+.. code-block:: php
+
    $data = SiteAnalyzer::getStats();
    print( SiteAnalyzer::transform($data, "html") );
 
