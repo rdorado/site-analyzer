@@ -5,15 +5,16 @@ Site Analyzer
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/rdorado/site-analyzer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rdorado/site-analyzer/)
 [![Build Status](https://travis-ci.com/rdorado/site-analyzer.svg?branch=master)](https://travis-ci.com/rdorado/site-analyzer)
 
-SiteAnalyzer is a package to analyze PHP sites. With SiteAnalyzer, it is possible to count pages, understand user behavior, analyze site dynamic, and perform A/B testings. SiteAnalyzer can be installed into any PHP in seconds without affecting the bussiness logic of the application and customized according to the needs. SiteAnalyzer makes use of machine learning algorithms and statistics to create powerful reports and analysis. 
+SiteAnalyzer is a free package for analyzing PHP sites. With SiteAnalyzer, it is possible to count pages, understand user behavior, analyze site dynamic, and perform A/B testings. SiteAnalyzer can be installed into any PHP in seconds without affecting the bussiness logic of the application and customized according to the needs. 
 
 Features
 --------
 
 - Click counter
+- Site dynamics analysis
 - User profile analysis
 - A/B testing
-- Site dynamics analysis
+
 
 Installation
 ------------
@@ -73,55 +74,5 @@ Documentation
 
 Read the docs at https://site-analyzer.readthedocs.io/en/latest/.
 
-
-<!---
--  `Quickstart <https://wikipedia.readthedocs.org/en/latest/quickstart.html>`__
--  `Full API <https://wikipedia.readthedocs.org/en/latest/code.html>`__
-
-
-
-
-## Click counter
-## User profile analysis
-## A/B testing
-## Site dynamics analysis
-
-
-
-## Other features:
-
-
-### Example 2: time analysis
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-### Example 3: user analysis
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-
-### Path Analytics
-
-###  Example 4: math matrix
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-### Example 5: a/b test</h2>");
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-### Profile Analyisis
-### Example 6: User profile
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-### Example 7: User-Time profile
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
-### Page profiling
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
-
--->
 
 
