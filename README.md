@@ -30,7 +30,7 @@ Or modify your composer.json requirements:
 
 ```json
     "require": {
-        "rdorado/site-analyzer": "^0.0.1"
+        "rdorado/site-analyzer": "^0.1.1"
     }
 ```
 and update your project:
