@@ -5,6 +5,9 @@ Examples
 
 Example 1: time analysis
 ============================
+
+.. code-block:: php
+   :linenos:
 $data = SiteAnalyzer::getStats();
 print( SiteAnalyzer::transform($data, "html") );
 
