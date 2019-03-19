@@ -8,8 +8,9 @@ Example 1: time analysis
 
 .. code-block:: php
    :linenos:
-$data = SiteAnalyzer::getStats();
-print( SiteAnalyzer::transform($data, "html") );
+   
+   $data = SiteAnalyzer::getStats();
+   print( SiteAnalyzer::transform($data, "html") );
 
 Example 2: user analysis
 ============================
