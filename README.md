@@ -10,7 +10,6 @@ SiteAnalyzer is a free package for analyzing PHP sites. With SiteAnalyzer, it is
 Features
 --------
 
-
 - Click counter
 - Site dynamics analysis
 - User profile analysis
