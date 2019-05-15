@@ -15,7 +15,6 @@ Features
 - User profile analysis
 - A/B testing
 
-
 Installation
 ------------
 
